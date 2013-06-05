@@ -1,0 +1,8 @@
+RewriteEngine On
+RewriteCond %{HTTP_HOST} ^https://www.restorationhealth.yourhealthsupport.com$ [NC]
+RewriteRule ^(.*)$ https://restorationhealth.yourhealthsupport.com [R=301,L]
+RewriteCond %{HTTP_HOST} ^www.restorationhealth.yourhealthsupport.com$ [NC]
+RewriteRule ^(.*)$ https://restorationhealth.yourhealthsupport.com [R=301,L]
+RewriteCond %{HTTPS} !on
+RewriteRule (.*) https://%{HTTP_HOST}%{REQUEST_URI}
+
