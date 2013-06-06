@@ -179,7 +179,7 @@ $p_stat="No Show";
 }elseif($val==6){
 $p_stat="Checked In";
 }elseif($val==7){
-$p_stat="Attension Needed";
+$p_stat="Attention Needed";
 }
 
 return $p_stat;
@@ -325,7 +325,7 @@ function get_novi_id($user,$pass,$organisationid,$firstname,$lastname,$username,
 //novi user  end
 
 
-function AddClinicDoctor($clinicid,$clinicname,$clinicaddress1,$clinicaddress2,$city,$state,$zip,$phone,$fax1,$fax2,$clinicweb,$doctorfirstname,$doctorlastname,$doctoremail,$doctorsex,$doctordob,$doctorusername,$doctorpass){
+function AddClinicDoctor($clinicid,$clinicname,$clinicaddress1,$clinicaddress2,$city,$state,$zip,$phone,$fax1,$fax2,$clinicweb,$doctorfirstname,$doctorlastname,$doctoremail,$doctorsex,$doctordob,$doctoremail,$doctorpass){
 $aParametres = array("ClinicID"  =>  $clinicid,
 						"ClinicName"  =>  $clinicname,
 						"ClinicAddress1"  =>  $clinicaddress1,
@@ -342,7 +342,7 @@ $aParametres = array("ClinicID"  =>  $clinicid,
 						"DoctorsEmail"  =>  $doctoremail,
 						"DoctorsSex"  =>  $doctorsex,
 						"DoctorsDOB"  =>  $doctordob,
-						"DoctorsUserName"  =>  $doctorusername,
+						"DoctorsUserName"  =>  $doctoremail,
 						"DoctorsPassword"  =>  $doctorpass
                      );
 

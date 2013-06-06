@@ -41,13 +41,15 @@ $bc_clinic_product			=	DBin($_POST["clinic_product"]);
 
 $bc_card_number				=	DBin($_POST["card_number"]);
 $bc_card_type				=	DBin($_POST["card_type"]);
-$bc_doctor_username			=	DBin($_POST["doctor_username"]);
+/* $bc_doctor_username			=	DBin($_POST["doctor_username"]); */
 $bc_doctor_password			=	DBin($_POST["doctor_password"]);
 $bc_GenensysUserID			=	DBin($_POST["GenensysUserID"]);
 $bc_doctor_last_name		=	DBin($_POST["doctor_last_name"]);
 $bc_doctor_first_name		=	DBin($_POST["doctor_first_name"]);
 $bc_dob					    =	$_POST["dob"];
-$bc_dob					    =   date("Y-m-d",strtotime(str_replace("/","-",$bc_dob)));
+$bc_dob2					= 	$bc_dob;
+//$bc_dob					    =   date("Y-m-d",strtotime(str_replace("/","-",$bc_dob)));
+$bc_dob					    =   date("Y-m-d",strtotime($bc_dob));
 $bc_doctor_gender			=	DBin($_POST["doctor_gender"]);
 $bc_arr_doctor_gender		=	array("Male" => "Male", "FeMale" => "FeMale");
 $bc_clinic_address1			=	DBin($_POST["clinic_address1"]);
@@ -118,6 +120,10 @@ if ($_POST["clinic_zip"] == "")
 if ($_POST["clinic_phone1"] == "")
 	$errors[] = "Phone1: can not be empty";
 
+/*
+if ($_POST["doctor_username"] == "")
+	$errors[] = "Username: can not be empty";
+*/
 if ($_POST["doctor_password"] == "")
 	$errors[] = "Password: can not be empty";
 if ($_POST["doctor_last_name"] == "")
@@ -140,89 +146,54 @@ $err .= '</ul></td></tr></table>';
 
 
 if (isset($_POST["submit"]) )
-	{
+{
 
 	if (!count($errors))
+	{
+		$genSysCustomerID 	= CreateSubscription($bc_doctor_first_name,$bc_doctor_last_name,$bc_doctor_email,$bc_clinic_product,$bc_card_number,$bc_month,$bc_year);
+		$EMRClinicID 		= AddClinicDoctor($bc_clinicid,$bc_clinic_name,$bc_clinic_address1,$bc_clinic_address2,$bc_clinic_city,$bc_clinic_state,$bc_clinic_zip,$bc_clinic_phone1,$bc_clinic_fax1,$bc_clinic_fax2,$bc_clinic_web,$bc_doctor_first_name,$bc_doctor_last_name,$bc_doctor_email,$bc_doctor_gender,$bc_dob2,$bc_doctor_email,$bc_doctor_password);
+
+		if ( $genSysCustomerID >= 1 )
 		{
-			$genSysCustomerID = CreateSubscription($bc_doctor_first_name,$bc_doctor_last_name,$bc_doctor_email,$bc_clinic_product,$bc_card_number,$bc_month,$bc_year);
-			$EMRClinicID 		= AddClinicDoctor($bc_clinicid,$bc_clinic_name,$bc_clinic_address1,$bc_clinic_address2,$bc_clinic_city,$bc_clinic_state,$bc_clinic_zip,$bc_clinic_phone1,$bc_clinic_fax1,$bc_clinic_fax2,$bc_clinic_web,$bc_doctor_first_name,$bc_doctor_last_name,$bc_doctor_email,$bc_doctor_gender,$bc_dob2,$bc_doctor_email,$bc_doctor_password);
-
-				if ( $genSysCustomerID >= 1 )
-					{
-						if(substr($EMRClinicID,0,5) != 'Error' )
-							{
-								$bc_ClinicID=$resu;
-
-								$sql	=	"insert into  `users` (`username`,`password`,`genensysuserid`,`clinicid`,`lastname`,`firstname`,`dob`,`sex`,`address`,`city`,`state`,`zip`,`phone`,`createdby`,`createddate`,`email`,`enabled`,`comments`,`primary`,`affiliatemarketingcode`,`lockedout`,`freesubscription`,`usertype`,`emr_clinic_id`,`emr_doctor_id`) values ('" . $bc_doctor_email . "','" . $bc_doctor_password . "','" . $genSysCustomerID . "','" . $bc_ClinicID . "','" . $bc_doctor_last_name . "','" . $bc_doctor_first_name . "','" . $bc_dob . "','" . $bc_doctor_gender . "','" . $bc_clinic_address1 . "','" . $bc_clinic_city . "','" . $bc_clinic_state . "','" . $bc_clinic_zip . "','" . $bc_clinic_phone1 . "','" . $bc_CreatedBy . "','" . $bc_CreatedDate . "','" . $bc_doctor_email . "','" . $bc_Enabled . "','" . $bc_Comments . "','" . $bc_Primary . "','" . $bc_AffiliateMarketingCode . "','" . $bc_LockedOut . "','" . $bc_FreeSubscription . "','".$usertype."','". $EMRClinicID[0] ."','". $EMRClinicID[1] ."')";
-
-								 $res	=	mysql_query($sql);
-								 $bc_cid = mysql_insert_id();
-
-								 	$to		 =  $bc_doctor_email;
-									$subject = "Login Information";
-
-									$message = "Dear User"."<br /><br />"."Please note down your login information."."<br />"."USERNAME : ".$bc_doctor_username."<br />"."PASSWORD : ".$bc_doctor_password ."<br /><br />"."Now you can login using link below."."<br />". ABSOLUTE_PATH ."login.php";
-
-									$headers = "MIME-Version: 1.0" . "\r\n";
-									$headers .= "Content-type:text/html;charset=iso-8859-1" . "\r\n";
-									$headers	.= 'From: Restorationhealth<info@yourhealthsupport.com>' . "\r\n";
-
-									mail($to ,$subject,$message, $headers);
-
-								 mysql_query("insert into `subscription_detail` SET `clinic_id` = '".$bc_ClinicID."',`user_id` = '".$bc_cid."',`sub_id` = '".$bc_clinic_product."',`sub_title` = '".$bc_sub_title."',`sub_des` = '".$bc_sub_des."',`sub_price` = '".$bc_sub_price."',`sub_int` = '".$bc_sub_int."',`sub_int_unt` = '".$bc_int_unt."'");
-
-									 if($bc_coupon)
-									 	{
-										 	mysql_query("insert into `affiliate` set `clinic_id`='$bc_cid', `affiliate_id`='$affiliate_id'");
-										 }
-
-									$sucMessage = "Record Entered Successfully"." ".$EMRClinicID[0]." ".$EMRClinicID[1];
-									echo "<script>window.location.href='login.php';</script>";
-							}
-						else
-							{
-
-								$sql	=	"insert into `clinic` (`clinicname`,`address1`,`address2`,`city`,`state`,`zip`,`phone1`,`phone2`,`fax1`,`fax2`,`website`) values ('" . $bc_clinic_name . "','" . $bc_clinic_address1 . "','" . $bc_clinic_address2 . "','" . $bc_clinic_city . "','" . $bc_clinic_state . "','" . $bc_clinic_zip . "','" . $bc_clinic_phone1 . "','" . $bc_clinic_phone2 . "','" . $bc_clinic_fax1 . "','" . $bc_clinic_fax2 . "','" . $bc_clinic_web . "')";
-
-								 $res	=	mysql_query($sql);
-								 $bc_ClinicID = mysql_insert_id();
-
-								 	if ($res)
-								 		{
-									 		$sql	=	"insert into  `users` (`username`,`password`,`genensysuserid`,`clinicid`,`lastname`,`firstname`,`dob`,`sex`,`address`,`city`,`state`,`zip`,`phone`,`createdby`,`createddate`,`email`,`enabled`,`comments`,`primary`,`affiliatemarketingcode`,`lockedout`,`freesubscription`,`usertype`) values ('" . $bc_doctor_username . "','" . $bc_doctor_password . "','" . $genSysCustomerID . "','" . $bc_ClinicID . "','" . $bc_doctor_last_name . "','" . $bc_doctor_first_name . "','" . $bc_dob . "','" . $bc_doctor_gender . "','" . $bc_clinic_address1 . "','" . $bc_clinic_city . "','" . $bc_clinic_state . "','" . $bc_clinic_zip . "','" . $bc_clinic_phone1 . "','" . $bc_CreatedBy . "','" . $bc_CreatedDate . "','" . $bc_doctor_email . "','" . $bc_Enabled . "','" . $bc_Comments . "','" . $bc_Primary . "','" . $bc_AffiliateMarketingCode . "','" . $bc_LockedOut . "','" . $bc_FreeSubscription . "','".$usertype."')";
-
-											$res	=	mysql_query($sql);
-											$bc_cid = mysql_insert_id();
-
-											mysql_query("insert into `subscription_detail` SET `clinic_id` = '".$bc_ClinicID."',`user_id` = '".$bc_cid."',`sub_id` = '".$bc_clinic_product."',`sub_title` = '".$bc_sub_title."',`sub_des` = '".$bc_sub_des."',`sub_price` = '".$bc_sub_price."',`sub_int` = '".$bc_sub_int."',`sub_int_unt` = '".$bc_int_unt."'");
-
-											if($bc_coupon)
-												{
-													mysql_query("insert into `affiliate` set `clinic_id`='$bc_cid', `affiliate_id`='$affiliate_id'");
-												}
-
-												$sucMessage = "Record Entered Successfully"." ".$EMRClinicID[0]." ".$EMRClinicID[1];
-												echo "<script>window.location.href='login.php';</script>";
-
-										}
-									else
-										{
-											$sucMessage = "Error: Please try Later";
-										}
-							}
-
-					}
-		else
+			if ( substr($EMRClinicID,0,5) != 'Error' )
 			{
-				$sucMessage = "Error: unsuccessful ";
+				$sql	=	"insert into `clinic` (`clinicname`,`address1`,`address2`,`city`,`state`,`zip`,`phone1`,`phone2`,`fax1`,`fax2`,`website`) values ('" . $bc_clinic_name . "','" . $bc_clinic_address1 . "','" . $bc_clinic_address2 . "','" . $bc_clinic_city . "','" . $bc_clinic_state . "','" . $bc_clinic_zip . "','" . $bc_clinic_phone1 . "','" . $bc_clinic_phone2 . "','" . $bc_clinic_fax1 . "','" . $bc_clinic_fax2 . "','" . $bc_clinic_web . "')";
+
+				$res	=	mysql_query($sql);
+				$bc_ClinicID = mysql_insert_id();
+
+				$sql	=	"insert into  `users` (`username`,`password`,`genensysuserid`,`clinicid`,`lastname`,`firstname`,`dob`,`sex`,`address`,`city`,`state`,`zip`,`phone`,`createdby`,`createddate`,`email`,`enabled`,`comments`,`primary`,`affiliatemarketingcode`,`lockedout`,`freesubscription`,`usertype`,`emr_clinic_id`,`emr_doctor_id`) values ('" . $bc_doctor_email . "','" . $bc_doctor_password . "','" . $genSysCustomerID . "','" . $bc_ClinicID . "','" . $bc_doctor_last_name . "','" . $bc_doctor_first_name . "','" . $bc_dob . "','" . $bc_doctor_gender . "','" . $bc_clinic_address1 . "','" . $bc_clinic_city . "','" . $bc_clinic_state . "','" . $bc_clinic_zip . "','" . $bc_clinic_phone1 . "','" . $bc_CreatedBy . "','" . $bc_CreatedDate . "','" . $bc_doctor_email . "','" . $bc_Enabled . "','" . $bc_Comments . "','" . $bc_Primary . "','" . $bc_AffiliateMarketingCode . "','" . $bc_LockedOut . "','" . $bc_FreeSubscription . "','".$usertype."','". $EMRClinicID[0] ."','". $EMRClinicID[1] ."')";
+
+				$res	=	mysql_query($sql);
+				$bc_cid = mysql_insert_id();
+
+				$to		 =  $bc_doctor_email;
+				$subject = "Login Information";
+
+				$message = "Dear User"."<br /><br />"."Please note down your login information."."<br />"."EMAIL : ".$bc_doctor_email."<br />"."PASSWORD : ".$bc_doctor_password ."<br /><br />"."Now you can login using link below."."<br />". ABSOLUTE_PATH ."login.php";
+
+				$headers = "MIME-Version: 1.0" . "\r\n";
+				$headers .= "Content-type:text/html;charset=iso-8859-1" . "\r\n";
+				$headers	.= 'From: Restorationhealth<info@yourhealthsupport.com>' . "\r\n";
+
+				mail($to ,$subject,$message, $headers);
+
+				mysql_query("insert into `subscription_detail` SET `clinic_id` = '".$bc_ClinicID."',`user_id` = '".$bc_cid."',`sub_id` = '".$bc_clinic_product."',`sub_title` = '".$bc_sub_title."',`sub_des` = '".$bc_sub_des."',`sub_price` = '".$bc_sub_price."',`sub_int` = '".$bc_sub_int."',`sub_int_unt` = '".$bc_int_unt."'");
+
+				if($bc_coupon)
+					mysql_query("insert into `affiliate` set `clinic_id`='$bc_cid', `affiliate_id`='$affiliate_id'");
+
+				$sucMessage = "Record Entered Successfully";
+				echo "<script>window.location.href='login.php';</script>";
+			} else {
+				$sucMessage = $EMRClinicID;
 			}
-
-
-	}
-	else
-		{
-			$sucMessage = $err;
+		} else {
+			$sucMessage = 'Error: Subscription Failed. Please check your Credit Card details.';
 		}
+	} else {
+		$sucMessage = $err;
+	}
 }
 
 include_once('includes/header.php');
