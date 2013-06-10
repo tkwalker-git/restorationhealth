@@ -1,5 +1,5 @@
 <?php
-include_once('admin/database.php'); 
+include_once('admin/database.php');
 include_once('site_functions.php');
 
 if (!$_SESSION['LOGGEDIN_MEMBER_ID']>0)
@@ -44,7 +44,7 @@ $err = '<table border="0" width="90%"><tr><td class="error" ><ul>';
 for ($i=0;$i<count($errors); $i++) {
 	$err .= '<li>' . $errors[$i] . '</li>';
 }
-$err .= '</ul></td></tr></table>';	
+$err .= '</ul></td></tr></table>';
 
 if (isset($_POST["submit"]) ) {
 
@@ -58,10 +58,10 @@ if (isset($_POST["submit"]) ) {
 				$sucMessage = "Record Successfully inserted.";
 				echo "<script>window.location.href='clinic_manager.php?p=supplement&id=$frmID';</script>";
 			} else {
-				$sucMessage = "Error: Please try Later";
+				$sucMessage = "Error 1: Please try Later";
 			} // end if res
 		} // end if
-		
+
 		if ($action1 == "edit") {
 			$sql	=	"update supplement set supplement_name = '" . $bc_supplement_name . "', description = '" . $bc_description . "', suppliers = '" . $bc_suppliers . "', cost = '" . $bc_cost . "', retail_price = '" . $bc_retail_price . "', dosage = '" . $bc_dosage . "',comment = '" . $bc_comment . "',without_food = '" . $bc_without_food . "',breakfast = '" . $bc_breakfast . "',snack1 = '" . $bc_snack1 . "',lunch = '" . $bc_lunch . "',snack2 = '" . $bc_snack2 . "',dinner = '" . $bc_dinner . "',before_bed = '" . $bc_before_bed . "' where id=$frmID";
 			$res	=	mysql_query($sql);
@@ -69,7 +69,7 @@ if (isset($_POST["submit"]) ) {
 				$sucMessage = "Record Successfully updated.";
 				echo "<script>window.location.href='clinic_manager.php?p=supplement&id=$frmID';</script>";
 			} else {
-				$sucMessage = "Error: Please try Later";
+				$sucMessage = "Error 2: Please try Later";
 			} // end if res
 		} // end if
 
@@ -101,7 +101,7 @@ if ($res) {
 		$bc_before_bed		=	$row['before_bed'];
 	} // end if row
 	$action = "edit";
-} // end if 
+} // end if
 
 $meta_title	= "Create Supplement";
 
@@ -124,7 +124,7 @@ include_once('includes/header.php');
                     $('#cost').formatCurrency();
                 });
             });
-            
+
             // Sample 2
             $(document).ready(function()
             {
@@ -149,20 +149,20 @@ include_once('includes/header.php');
 	height:48px;
 	padding:0 16px;
 	}
-	
+
 .ev_new_box_center{
 	margin:auto;
 	width:936px;
 	}
-	
+
 .ev_new_box_center .basic_box, .ev_new_box_center .featured_box, .ev_new_box_center .premium_box, .ev_new_box_center .custom_box{
 	width:234px;
 	height:528px;
 	float:left;
 	position:absolute
 	}
-	
-	
+
+
 .ev_new_box_center .basic_box ul, .ev_new_box_center .featured_box ul, .ev_new_box_center .premium_box ul, .ev_new_box_center .custom_box ul{
 	padding:10px 0 0 18px;
 	margin:0
@@ -181,19 +181,19 @@ include_once('includes/header.php');
 	background:url(images/featured_box.gif) no-repeat;
 	left:234px;
 	}
-	
+
 .ev_new_box_center .premium_box{
 	background:url(images/premium_box.gif) no-repeat;
 	left:468px;
 	}
-	
+
 .ev_new_box_center .custom_box{
 	background:url(images/custom_box.gif) no-repeat;
 	left:702px;
 	}
-	
-	
-.ev_new_box_center .basic_box .black, .ev_new_box_center .featured_box .black, .ev_new_box_center .premium_box .black, .ev_new_box_center .custom_box .black{	
+
+
+.ev_new_box_center .basic_box .black, .ev_new_box_center .featured_box .black, .ev_new_box_center .premium_box .black, .ev_new_box_center .custom_box .black{
 	filter:alpha(opacity=15);
 	-ms-filter:alpha(opacity=15);
 	-moz-opacity:0.15;
@@ -203,17 +203,17 @@ include_once('includes/header.php');
 	height:528px;
 	position:absolute;
 	}
-	
-	
+
+
 .ev_new_box_center .black:hover{
 	display:none;
 	}
-	
+
 .ev_new_box_center .basic_box:hover > .black, .ev_new_box_center .featured_box:hover > .black, .ev_new_box_center .premium_box:hover > .black, .ev_new_box_center .custom_box:hover > .black{
 	display:none;
 	}
-	
-	
+
+
 .ev_new_box_center .basic_box:hover, .ev_new_box_center .featured_box:hover, .ev_new_box_center .premium_box:hover, .ev_new_box_center .custom_box:hover{
 	z-index:9999;
 	-moz-box-shadow:0px 0px 7px 2px #464646;
@@ -232,7 +232,7 @@ include_once('includes/header.php');
 	font-family:Arial, Helvetica, sans-serif;
 	line-height:18px;
 }
-	
+
 #showimg1,#showimg3{
 	padding: 5px 0 5px 20px;
 	width: 45%
@@ -242,7 +242,7 @@ include_once('includes/header.php');
 	padding: 5px 0 5px 27px;
 	width:45%;
 	}
-	
+
 
 #accordion h3 {
     border-bottom: 1px solid #89C76F;
@@ -299,28 +299,28 @@ include_once('includes/header.php');
                   <div id="head">Description</div>
                   <div>
                     <textarea  name="description" id="description" class="bc_input" style="width:825px;height:250px;" /><?php echo $bc_description; ?></textarea>
-                  </div>                 
+                  </div>
 
                   	<div style="float:left; width:33%"><br />
 	                  <div id="head">Suppliers</div>
 		               <input type="text" name="suppliers" id="suppliers" class="new_input" value="<?php echo $bc_suppliers; ?>"/>
 		              </div>
-		            
+
 		            <div style="float:left; width:33%"><br />
 	                  <div id="head">Cost</div>
 	                    <input type="text" name="cost" id="cost" class="currency" value="<?php echo $bc_cost; ?>"/>
-		            </div>  
-		            
+		            </div>
+
 		            <div style="float:left; width:33%"><br />
 	                    <div id="head">Retail Price</div>
 	                    <input type="text" name="retail_price" id="retail_price" class="currency" value="<?php echo $bc_retail_price; ?>"/>
 		            </div>
-		            
+
 		              <div class="clr"></div><br>
-		                              
-                                   
+
+
                   <div style="float:left; width:35%">
-                  <div id="head">Dosage</div>                 
+                  <div id="head">Dosage</div>
                   	<table>
                     	<tr>
                         	<td width="82"><strong>Dosage</strong>:</td>
@@ -358,35 +358,35 @@ include_once('includes/header.php');
 
                     </table>
                   </div>
-                    
-                  
+
+
 
                     <div style="float:right; width:60%">
-                  <div id="head">Special Dosage Instructions</div>                 
+                  <div id="head">Special Dosage Instructions</div>
                   	<table>
-                       
+
                         <tr>
                             <td><input type="text" name="comment" id="comments" class="new_input" style="width:470px;height:255px;" value="<?php echo $bc_comment; ?>"></td>
                         </tr>
 
                     </table>
-                   
+
                     </div>
                     <div class="clr"></div>
                     <div class="create_event_submited"><br /><br />
 		            <input type="image" src="<?php echo IMAGE_PATH; ?>submit-btn.png" name="submit" value="Create Supplement" align="right" />
-		            <input type="hidden" name="submit" value="Create Supplement" />        
+		            <input type="hidden" name="submit" value="Create Supplement" />
 		          </div>
-                  </div>                               
                   </div>
-                  </div>                            
-        </div>       
+                  </div>
+                  </div>
+        </div>
       </form>
     </div>
   </div>
 </div>
 
-  				
+
 
 <?php include_once('includes/footer.php');?>
 <script>
@@ -410,6 +410,6 @@ include_once('includes/header.php');
 		// Example content CSS (should be your site CSS)
 		content_css : "style.css",
 	});
-	
+
 
 </script>

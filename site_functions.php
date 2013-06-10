@@ -289,7 +289,7 @@ function registeruser($posta,$organisationid,$firstname,$lastname,$username,$ema
 }
 
 
-function get_novi_id($user,$pass,$organisationid,$firstname,$lastname,$username,$email,$password)
+function get_novi_id($user,$pass,$organisationid,$firstname,$lastname,$email,$email,$password)
 {
 
 	$client = new SoapClient("https://pangeaifa.com/novisurvey/ws/AdminWebService.asmx?WSDL",
@@ -306,7 +306,7 @@ function get_novi_id($user,$pass,$organisationid,$firstname,$lastname,$username,
 		$tmp = $client->_cookies;
 	 	$_SESSION['NoviSurveySessionCookie'] = $tmp['NoviSurveySessionCookie'][0];
 		session_write_close();
-	   $nuid = registeruser($_SESSION['NoviSurveySessionCookie'],$organisationid,$firstname,$lastname,$username,$email,$password);
+	   $nuid = registeruser($_SESSION['NoviSurveySessionCookie'],$organisationid,$firstname,$lastname,$email,$email,$password);
 
 			}
 	else

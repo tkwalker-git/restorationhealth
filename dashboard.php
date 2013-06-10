@@ -291,7 +291,7 @@ include_once('includes/header.php');
 					?> </span></td>
                         </tr>
                         <tr>
-        	                <td colspan="3"><a href="<?php echo ABSOLUTE_PATH; ?>clinic_manager.php?p=follow-up"style="color:#0066FF; font-size:15px;">Review Required (Notes/Plan) </a>&nbsp;<span style="color:#FF0000;"> <?php $today=date("Y-m-d");
+        	                <td colspan="3"><a href="<?php echo ABSOLUTE_PATH; ?>clinic_manager.php?p=new-reports"style="color:#0066FF; font-size:15px;">Review Required (Notes/Plan) </a>&nbsp;<span style="color:#FF0000;"> <?php $today=date("Y-m-d");
 							echo "[";
 
 							 $sdaf =  "SELECT count(*) as tot FROM `patients` where status='3' && clinicid='".$_SESSION['LOGGEDIN_MEMBER_ID']."' ";

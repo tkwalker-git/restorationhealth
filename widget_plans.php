@@ -1,3 +1,29 @@
+<script language="javascript">
+function fn_submit()
+{
+document.status.submit();
+}
+</script>
+
+<script language="javascript">
+function chng_com_status(vala){
+if(vala != ""){
+$.post("set_plan_status.php", {centerid:vala},function(data) {
+location.reload();
+    }
+   )   }
+}
+
+function chng_rev_status(rvst){
+if(rvst != ""){
+$.post("set_plan_review_status.php", {centerid:rvst},function(data) {
+location.reload();
+    }
+   )   }
+}
+
+</script>
+
 <div class="blocker">
   <div class="blockerTop"></div>
   <!--end blockerTop-->
@@ -18,23 +44,19 @@
 			<td width="45%" class="topleftright"><strong>Actions</strong></td>
 		</tr>
 		<?php
+			$sql = "select * from `plan` where `patient_id`='".$row['id']."' && clinic_id='".$_SESSION['LOGGEDIN_MEMBER_ID']."' order by id DESC";
+			$res = mysql_query($sql);
+			$sqlt="select * from plan where patient_id=".$_GET['id']." && clinic_id='".$_SESSION['LOGGEDIN_MEMBER_ID']."'";
+			$dfre=mysql_query($sqlt);
+			$no=1;
+			while($get_co_id=mysql_fetch_array($dfre)){
 
-				$sql = "select * from `plan` where `patient_id`='".$row['id']."' && clinic_id='".$_SESSION['LOGGEDIN_MEMBER_ID']."' order by id DESC";
-				$res = mysql_query($sql);
+					$row=mysql_fetch_array($res);
 
-			if($res)
-			{
-				while($row=mysql_fetch_array($res))
-				{
+					$gstst = $get_co_id['status'];
 
-					$sqlt="select * from patient_comments where patient_id=".$_GET['id']." && clinic_id='".$_SESSION['LOGGEDIN_MEMBER_ID']."'";
-					$dfre=mysql_query($sqlt);
-					$no=1;
+					$stats_pat = $get_co_id['review_status']; ?>
 
-							$gstst = $get_co_id['status'];
-
-							$stats_pat = $get_co_id['review_status'];
-				?>
 					<tr>
 					<td class="botleft"><a target="_blank" href="view_plan_report.php?id=<?php echo $row['id']; ?>"style="color:#0066FF;"><?php echo  $row['plan_name'];?></a></td>
 					<td class="botleft"><a target="_blank" href="view_plan_report.php?id=<?php echo $row['id']; ?>"style="color:#0066FF;"><?php echo $row['plan_detail']; ?></td>
@@ -49,8 +71,8 @@
 				</td>
 					</tr>
 
-		<?php }
-			}
+
+		<?php $no++;}
 
 		?>
 

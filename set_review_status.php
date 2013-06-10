@@ -17,8 +17,8 @@ if($_POST) {
   $chk_final_id = mysql_query("select * from patient_comments where id='".$val1."'");
   while($res_id = mysql_fetch_array($chk_final_id)){
    $pat_id		= $res_id['patient_id'];
-   
-   
+
+
 
   $chk_final_status = mysql_query("select * from patient_comments where clinic_id='".$_SESSION['LOGGEDIN_MEMBER_ID']."' && patient_id='".$pat_id."' && review_status=3");
     $fin_res_rev = mysql_num_rows($chk_final_status);

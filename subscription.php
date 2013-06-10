@@ -41,7 +41,6 @@ $bc_clinic_product			=	DBin($_POST["clinic_product"]);
 
 $bc_card_number				=	DBin($_POST["card_number"]);
 $bc_card_type				=	DBin($_POST["card_type"]);
-/* $bc_doctor_username			=	DBin($_POST["doctor_username"]); */
 $bc_doctor_password			=	DBin($_POST["doctor_password"]);
 $bc_GenensysUserID			=	DBin($_POST["GenensysUserID"]);
 $bc_doctor_last_name		=	DBin($_POST["doctor_last_name"]);
@@ -584,7 +583,7 @@ if(val >= 1){
 	</select>	</td>
   </tr>
   <tr>
-    <td><strong>* Date of Birth</strong>:<br /><input type="text" name="dob" id="dob" class="new_input1" value="" /></td>
+    <td><strong>* Date of Birth</strong>:<br /><input type="text" name="dob" id="dob" class="new_input1" value="<?php echo $bc_dob; ?>" /></td>
     <td>&nbsp;</td>
     <!-- <td><strong>* Doctor User Name</strong>:<br /><input type="text" name="doctor_username" class="new_input1" value="<?php echo $bc_doctor_username; ?>" /></td> -->
   </tr>
@@ -596,7 +595,7 @@ if(val >= 1){
       <input type="password" name="doctor_password1" class="new_input1" value="<?php echo $bc_doctor_password; ?>" /></td>
   </tr>
   <tr>
-  <td colspan="3">Password must be minimum of 6 characters in length. Must contain at least 1 special character like (? , !, * etc).</td>
+  <td colspan="3">Password must be minimum of 8 characters in length.</td>
   </tr>
   <tr>
     <td><strong>* Clinic Name</strong>:<br />

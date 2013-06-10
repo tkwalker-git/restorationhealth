@@ -1,9 +1,80 @@
-<?php require_once('includes/header.php');?>
+<?php
+	include_once('admin/database.php');
+	include_once('site_functions.php');
+	?>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta id="FirstCtrlID" http-equiv="X-UA-Compatible" content="IE=8" />
+<meta property="og:title" content="Terms of Service" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="<?=$page_url?>" />
+<meta property="og:image" content="<?=$image?>" />
+<meta property="og:site_name" content="eventgrabber" />
+<meta name="description" content="Terms of Service" />
+<title>Terms of Service</title>
+
+<link rel="shortcut icon" href="<?php echo ABSOLUTE_PATH; ?>images/favicon.ico" type="image/x-icon" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="<?php echo ABSOLUTE_PATH; ?>style.css"/>
+<script type="text/javascript" src="<?php echo ABSOLUTE_PATH; ?>js/common_bc.js"></script>
+<script type="text/javascript" src="<?php echo ABSOLUTE_PATH; ?>js/ev_functions.js"></script>
+<script type="text/javascript" src="<?php echo ABSOLUTE_PATH; ?>js/jquery-1.4.2.min.js"></script>
+<script type="text/javascript" src="<?php echo ABSOLUTE_PATH; ?>js/popup.js"></script>
+<script type="text/javascript" src="<?php echo ABSOLUTE_PATH; ?>js/validate.decimal.js"></script>
+<script type="text/javascript">
+	var	a	=	$('body').height();
+</script>
+
+</head>
+<body>
+
+<div id="page-bg" class="translucent"></div>
+<div class="subscribe-overlayer" id="overlayer" align="center"></div>
+<div>
+<!--Start Top Part -->
+<div class="headerOut">
+  <!--Start Tab -->
+  <div class="tabCon">
+    <div class="tabLeft">
+
+    </div>
+    <div class="tabRight">&nbsp;
+
+    </div>
+    <div class="clr"></div>
+  </div>
+  <div class="header">
+    <div class="logo">
+	<a href="<?php echo ABSOLUTE_PATH_WITHOUT_SSL;?>"><img src="<?php echo ABSOLUTE_PATH.logo(); ?>" alt="" border="0"  /></a><br /><br />
+</div>
+    <div class="logoTag">
+
+    </div>
+    <div class="headerRight">
+      <div class="topBtn">
+      </div>
+      <br />
+    </div>
+    <div class="clr"></div>
+  </div>
+  <!--End Header -->
+</div>
+<!--End Tab -->
+
+
+
+
+
+
+
+
 
 
 <div class="topContainer" >
 
-		<div class="welcomeBox"></div>
+		<div class="welcomeBox"></div><br /><br />
 		<div class="eventDetailhd"><span><strong>Terms of Use</strong></span></div>
 		<div class="clr gap"></div>
 			This License and Practice Support Agreement ("Agreement"), is effective as upon electronic acceptance between
@@ -340,4 +411,19 @@ but will instead terminate.<br><br>
 	</div>
 
 </div>
-<?php require_once('includes/footer.php');?>
+
+
+<!--</div>-->
+<div class="footerOuter">
+		<div class="footer">
+			<div class="footerLink">
+				&nbsp;
+			</div>
+			<div class="footerBot">&copy; 2013-2014. All Rights Reserved.</div>
+			</div>
+	</div>
+	<!--End Footer -->
+</div>
+
+</body>
+</html>

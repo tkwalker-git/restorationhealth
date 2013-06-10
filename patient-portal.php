@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 require_once('admin/database.php');
 require_once('site_functions.php');
@@ -7,21 +7,21 @@ require_once('site_functions.php');
 if (validateID($_SESSION['LOGGEDIN_MEMBER_ID'],'patients',$_GET["id"]) =='false')
         echo "<script>window.location.href='clinic_manager.php';</script>";
 */
- $member_id = $_SESSION['LOGGEDIN_MEMBER_ID']; 
+ $member_id = $_SESSION['LOGGEDIN_MEMBER_ID'];
  $dt=date('Y-m-d');
  $pdo = getSingleColumn("clinicid","select * from `patients` where `id`='".$_SESSION['LOGGEDIN_MEMBER_ID']."'");
- 
+
 	if($_POST['upload']){
-	$f_name = $_POST['f_name'];	
+	$f_name = $_POST['f_name'];
 	if ($_FILES["p_img"]["name"] != "") {
-			$bc_p_image  = time() . "_" . $_FILES["p_img"]["name"] ;		
+			$bc_p_image  = time() . "_" . $_FILES["p_img"]["name"] ;
 			move_uploaded_file($_FILES["p_img"]["tmp_name"], "patient_images/" .$bc_p_image);
 			/*makeThumbnail($bc_book_image, '../images/books/', $thDir, '100', '100', $th='re_');*/
 			mysql_query("insert into patient_images set Patient_ID='".$member_id."',Image_Name='$f_name',File_name='$bc_p_image',Added_On='$dt',clinic_id='".$pdo."'");
-		} 
-		} 
-		
-	  
+		}
+		}
+
+
 
 
 include_once('includes/header.php');
@@ -43,81 +43,81 @@ if($_GET['id']){
         $email      = $row['email'];
         $username   = $row['username'];
         $password   = $row['password'];
-        
-        
+
+
     }
-    
+
     ///////get patient tests
-    
+
     $res1 = mysql_query("select * from patient_tests where patient_id='$id'");
         if(mysql_num_rows($res1)){
             while($row1=mysql_fetch_array($res1)){
             $tid= $row1['test_id'];
-                
+
                 $res2 = mysql_query("select * from tests where id='$tid'");
                 while($row2=mysql_fetch_array($res2)){
-                $testname.= $row2['test_name']."<br />";        
+                $testname.= $row2['test_name']."<br />";
                 }
-        
+
             }
-    
+
         }
 
     ///////get patient Lifestyle Changes
 
-    
+
     $res3 = mysql_query("select * from  plan_protocol where patient_id='$id'");
         if(mysql_num_rows($res3)){
             while($row3=mysql_fetch_array($res3)){
             $pid= $row3['protocol_id'];
-                
+
                 $res4 = mysql_query("select * from protocols where id='$pid'");
                 while($row4=mysql_fetch_array($res4)){
                 $lifestyle_changes.= $row4['lifestyle_changes']."<br />";
-                	     
+
                 }
-        
+
             }
-    
+
         }
 
     ///////get patient Dietary Changes
 
-    
+
     $res7 = mysql_query("select * from  plan_protocol where patient_id='$id'");
         if(mysql_num_rows($res7)){
             while($row4=mysql_fetch_array($res7)){
             $pid= $row4['protocol_id'];
-                
+
                 $res8 = mysql_query("select * from protocols where id='$pid'");
                 while($row5=mysql_fetch_array($res8)){
                 $dietary_changes.= $row5['dietary_changes']."<br />";
-                	     
+
                 }
-        
+
             }
-    
+
         }
-    	                	
-		                	
-    
+
+
+
         ///////get patient Plans
-    
+
 
         $res5 = mysql_query("select * from  plan_protocol where patient_id='$id'");
         if(mysql_num_rows($res5)){
             while($row5=mysql_fetch_array($res5)){
             $plid= $row5['plan_id'];
-                
+
                 $res6 = mysql_query("select * from plan where id='$plid' ORDER BY plan_date limit 1");
                 if($row6=mysql_fetch_array($res6)){
-                $planname = $row6['plan_name'];        
-                }                               
-        
+                $planname = $row6['plan_name'];
+                }
+
             }
-    
-        }   
-    
+
+        }
+
     }
 
 $full_address = $address . '<br>' . $city . ' ' . $state . ', ' . $zip;
@@ -131,8 +131,8 @@ $comments_s = strip_tags($comments);
 
 <html>
 <head>
-    
-    
+
+
 	<link rel="stylesheet" href="<?php echo ABSOLUTE_PATH;?>fancy/jquery.fancybox.css" type="text/css" media="screen" />
 	<script type="text/javascript" src="<?php echo ABSOLUTE_PATH;?>fancy/jquery.mousewheel-3.0.6.pack.js"></script>
 	<script type="text/javascript" src="<?php echo ABSOLUTE_PATH;?>fancy/jquery-1.8.2.min.js"></script>
@@ -150,12 +150,12 @@ $(document).ready(function() {
 $(document).ready(function() {
 		$(".fancybox").fancybox();
 	});
-        
-       
-       
 
 
-   
+
+
+
+
 
     </script>
     <style type="text/css">
@@ -280,7 +280,7 @@ $(document).ready(function() {
     min-height:637px;
     }
     </style>
-    
+
     <link type="text/css" rel="stylesheet" media="screen, projection" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/black-tie/jquery-ui.css">
     <script type='text/javascript' src='<?php echo ABSOLUTE_PATH;?>js/jquery.simplemodal.js'>
 </script>
@@ -331,8 +331,8 @@ function showPopup(){
                             <div class="buyTicketp1">
                                 <div style="overflow:hidden; float:left">
                                     <div class="thumb-1"><img src="<?php echo ABSOLUTE_PATH; ?>images/sim-demo.png" alt=""></div><!--end thumb-1-->
-                                    <?php 
-                                                            
+                                    <?php
+
                                                         //  echo $viw;
                                                             if($viw < 420){
                                                             echo "<div class='clr'><br /></div>";
@@ -373,15 +373,15 @@ function showPopup(){
 
                                 <div class="ew-price-area">
                                 <?php
-			
+
 			$sql10 = "select * from `plan` where `patient_id`='".$_SESSION['LOGGEDIN_MEMBER_ID']."' order by id DESC limit 0,1";
 			$res10 = mysql_query($sql10);
 			while ( $row10 = mysql_fetch_assoc($res10) ) {
 
 			?>
                                     <span class="ew-heading-a">Current Plan:&nbsp;<a href="view_plan_report_user.php?id=<?php echo $row10['id']; ?>" target="_blank"><span style="color:#ff4e1f;"><?php echo $planname; ?></span></a></span>
-                                    
-                                    <?php } ?>	
+
+                                    <?php } ?>
                                 </div>
 
                                 <div class="clr"></div>
@@ -440,14 +440,14 @@ function showPopup(){
                                 <ul>
                                     <li <?php if ($type=='assesments'|| $type==''){ echo 'class="active"'; } ?>><a href="?id=<?php echo $_GET['id'];?>&type=assesments#l">My Assessments and Reports</a></li>
                                    <!--  <li <?php if ($type=='reports'){ echo 'class="active"'; } ?>><a href="?id=<?php echo $_GET['id'];?>&type=reports#l">My Reports</a></li> -->
-                                    
+
                                    <!--  <li <?php if ($type=='concerns'){ echo 'class="active"'; } ?>><a href="?id=<?php echo $_GET['id'];?>&type=concerns#l">My Health Concerns</a></li> -->
 
 									<li <?php if ($type=='tests'){ echo 'class="active"'; } ?>><a href="?id=<?php echo $_GET['id'];?>&type=tests#l">Recommended Tests</a></li>
-									
+
                                     <li <?php if ($type=='images'){ echo 'class="active"'; } ?>><a href="?id=<?php echo $_GET['id'];?>&type=images#l">Files & Images</a></li>
-									
-									
+
+
 
                                     <li <?php if ($type=='plans'){ echo 'class="active"'; } ?>><a href="?id=<?php echo $_GET['id'];?>&type=plans#l">My Plans</a></li>
 
@@ -455,28 +455,28 @@ function showPopup(){
                                 </ul>
                             </div><!--end nav_new-->
                             <br class="clear">
-                            <a id="l"></a> <?php 
+                            <a id="l"></a> <?php
                                             if ( $type == 'reports' )
-                                                include_once("widget_reports.php");                 
-                                                
+                                                include_once("widget_reports.php");
+
                                             else if ( $type == 'concerns' )
                                                 include_once("widget_concerns.php");
-                                                
+
                                             else if ( $type == 'tests' )
                                                 include_once("widget_patient_tests.php");
-                                                
+
                                             else if ( $type == 'images' )
                                                 /* include_once("widget_files.php"); */
                                                 include_once("widget_files.php");
-                                                
+
                                             else if ( $type == 'plans' )
-                                                include_once("widget_patient_plans-tk.php");
-                                                
+                                                include_once("widget_patient_plans.php");
+
                                             else if ( $type == 'emr' )
-                                                include_once("widget_patient_emr.php"); 
+                                                include_once("widget_patient_emr.php");
                                             else
                                                 include_once("widget_assesments-patients.php");
-                                                            
+
                                         ?> <!--End new code-->
                         </div>
                     </div>

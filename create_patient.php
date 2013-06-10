@@ -49,7 +49,7 @@ while ($bc_row = mysql_fetch_assoc($arrRES) )
 	$bc_arr_clinic_state[$bc_row["id"]] = $bc_row["state"];
 
 
- $bc_user_name		= $_POST["user_name"];
+ $bc_email		= $_POST["user_name"];
  $bc_first_name		= $_POST['first_name'];
  $bc_last_name		= $_POST['last_name'];
  $bc_password		= $_POST['password'];
@@ -96,8 +96,10 @@ if($frmID)
 	$sql_id	= " && `id`!='". $frmID ."'";
 	$is_email_already	= getSingleColumn("id","select * from `patients` where `email`='". $_POST['email'] ."' ". $sql_id ."");
 
-if ($bc_user_name == "")
+/*
+if ($bc_email == "")
 	$errors[] = "Username is blank: Please enter a username";
+*/
 
 if(strlen($bc_password) < 8)
 	$errors[] = 'For security reasons, your password must be at least 8 characters long!';
@@ -105,7 +107,7 @@ if(strlen($bc_password) < 8)
 if (strpos($bc_password, " ") !== false)
 	$errors[] = 'Password Invalid: Your password cannot include spaces!';
 
-if (!preg_match("/[0-9]/", $password))
+if (!preg_match("/[0-9]/", $bc_password))
 	$errors[] = 'Password Invalid: Your password must include at least one number!';
 
 if (!preg_match("/[a-z]/i", $bc_password))
@@ -153,7 +155,7 @@ $err = '<table border="0" width="90%"><tr><td class="error" ><ul>';
 				{
 					$emr_clinic_id		= attribValue('users', 'emr_clinic_id', "where id='". $_SESSION['LOGGEDIN_MEMBER_ID'] ."'");
 					$emr_patient_id 	= addpatient($emr_clinic_id,$bc_first_name,$bc_last_name,$bc_gender,$bc_dob,$bc_address,$bc_city,$bc_state,$bc_zip,$bc_phone,$bc_email,$bc_email,$bc_password);
-					$novi_id 			= get_novi_id('admin','Meghal123',1,$bc_first_name,$bc_last_name,$bc_user_name,$bc_email,$bc_password);
+					$novi_id 			= get_novi_id('admin','Meghal123',1,$bc_first_name,$bc_last_name,$bc_email,$bc_email,$bc_password);
 
 					if($novi_id != '' && $novi_id != 'nologin')
 						$bc_novi_id	= $novi_id;
@@ -163,7 +165,7 @@ $err = '<table border="0" width="90%"><tr><td class="error" ><ul>';
 									if($bc_novi_id)
 									{
 									$bc_created_date	= 	date("Y-m-d");
-									$sql	=	"INSERT INTO `patients` (`id`,`username`, `password`, `genensysuserid`,`novi_id`,`clinicid`, `lastname`, `firstname`, `dob`, `sex`, `address`, `city`, `state`, `zip`, `phone`,`createdby`, `createddate`, `email`, `enabled`, `comments`, `primary`, `affiliatemarketingcode`) VALUES (NULL, '".$bc_user_name."', '". $bc_password ."', '". $emr_patient_id ."', '". $bc_novi_id ."', '". $bc_clinic_id ."', '". $bc_last_name ."', '". $bc_first_name ."', '". $bc_dob1 ."', '". $bc_gender ."', '". $bc_address ."', '". $bc_city ."', '". $bc_state ."', '". $bc_zip ."', '". $bc_phone ."',NULL, '". $bc_created_date ."', '". $bc_email ."', '". $bc_status ."', '". $bc_comments ."', '". $bc_primary ."', '". $bc_affiliate_marketing_code ."');";
+									$sql	=	"INSERT INTO `patients` (`id`,`username`, `password`, `genensysuserid`,`novi_id`,`clinicid`, `lastname`, `firstname`, `dob`, `sex`, `address`, `city`, `state`, `zip`, `phone`,`createdby`, `createddate`, `email`, `enabled`, `comments`, `primary`, `affiliatemarketingcode`) VALUES (NULL, '".$bc_email."', '". $bc_password ."', '". $emr_patient_id ."', '". $bc_novi_id ."', '". $bc_clinic_id ."', '". $bc_last_name ."', '". $bc_first_name ."', '". $bc_dob1 ."', '". $bc_gender ."', '". $bc_address ."', '". $bc_city ."', '". $bc_state ."', '". $bc_zip ."', '". $bc_phone ."',NULL, '". $bc_created_date ."', '". $bc_email ."', '". $bc_status ."', '". $bc_comments ."', '". $bc_primary ."', '". $bc_affiliate_marketing_code ."');";
 
 									$res			= mysql_query($sql);
 									$frmID			= mysql_insert_id();
@@ -402,24 +404,6 @@ jQuery(function($){
                 <h3 style="cursor:default"><span>Patient Profile</span></h3>
                 <div id="box" class="box">
 
-                <div class="bxs">
-                  <div id="head">Username</div>
-                  <div>
-                    <input type="text" name="user_name" style="color:#000" id="user_name" class="new_input" value=""/>
-					<div id='username_availability_result'></div>
-                  </div>
-                </div>
-
-
-
-
-                <div class="bxs">
-                  <div id="head">Password </div>
-                  <div>
-
-					 <input type="text" name="password" style="color:#000" id="password" class="new_input" value="<?php echo $bc_password; ?>"/>
-                  </div>
-                </div>
                   <div class="bxs">
                   <div id="head">First Name</div>
                   <div>
@@ -434,9 +418,17 @@ jQuery(function($){
                   </div>
                 </div>
 
+<!--
+				<div class="bxs">
+                  <div id="head">Username</div>
+                  <div>
+                    <input type="text" name="user_name" style="color:#000" id="user_name" class="new_input" value="<?php echo $bc_user_name; ?>"/>
+					<div id='username_availability_result'></div>
+                  </div>
+                </div>
+-->
 
 
-                <div class="clear"><br /></div>
 
 				 <div class="bxs">
                   <div id="head">Email</div>
@@ -446,6 +438,15 @@ jQuery(function($){
                   </div>
                 </div>
 
+				<div class="bxs">
+                  <div id="head">Password </div>
+                  <div>
+
+					 <input type="text" name="password" style="color:#000" id="password" class="new_input" value="<?php echo $bc_password; ?>"/>
+                  </div>
+                </div>
+
+				<div class="clear"><br /></div>
 
 				<div class="bxs">
                 <div id="head">DOB</div>

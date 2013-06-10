@@ -135,7 +135,7 @@ if($res)
 ?>
 
 Please Wait ...
-<script type='text/javascript'>window.location.href = 'https://restorationhealth.yourhealthsupport.com/dashboard.php';</script>
+<script type='text/javascript'>window.location.href = '<?php echo ABSOLUTE_PATH; ?>dashboard.php';</script>
 <?php
 					}
 					else
@@ -163,7 +163,7 @@ Please Wait ...
 						}
 						else
 						{
-							$sql = "INSERT INTO `mnoviforms_response` (`ID` ,`mnoviforms_id`,`PangiaId` ,`patient_id` ,`response_id` ,`date_started` ,`date_completed`) VALUES (NULL , '".$form_id."', '".$member_id."', '".$member_id."', NULL , '".date("Y-m-d H:i:s")."', NULL);";
+							$sql = "INSERT INTO `mnoviforms_response` (`ID` ,`mnoviforms_id`,`PangiaId` ,`patient_id` ,`response_id` ,`date_started` ,`date_completed`,`Revision`) VALUES (NULL , '".$form_id."', '".$member_id."', '".$member_id."', '".$_GET['sid']."', '".date("Y-m-d H:i:s")."', '".date("Y-m-d H:i:s")."','".$rev_id."');";
 							$res = mysql_query($sql);
 
 						}

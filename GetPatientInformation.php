@@ -140,7 +140,10 @@ SELECT response_id
 FROM mnoviforms_response m
 	INNER JOIN patients p
 		ON m.patient_id = p.id
+	INNER JOIN mnoviforms f
+		ON m.mnoviforms_id = f.ID
 WHERE p.ID = " . $patientID . "
+AND f.finding_status = 1
 ORDER BY m.date_completed desc
 LIMIT 1
 )
@@ -160,7 +163,10 @@ SELECT response_id
 FROM mnoviforms_response m
 	INNER JOIN patients p
 		ON m.patient_id = p.id
+	INNER JOIN mnoviforms f
+		ON m.mnoviforms_id = f.ID
 WHERE p.ID = " . $patientID . "
+AND f.finding_status = 1
 ORDER BY m.date_completed desc
 LIMIT 1
 )
