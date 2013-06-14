@@ -129,19 +129,13 @@
 	</a></td>
     <td align="center">
 	<a href="user_login.php">
-	<img src="<?php echo ABSOLUTE_PATH;?>images/patient 1.jpg" alt="" style="border:#eeeeee solid 1px;" border="0" />
+	<img src="<?php echo ABSOLUTE_PATH;?>images/patient-1.jpg" alt="" style="border:#eeeeee solid 1px;" border="0" />
 	</a>
 	</td>
   </tr>
   <tr>
     <td class="log_txt">Doctor</td>
     <td class="log_txt">Patient</td>
-  </tr>
-
-  <tr>
-  	<td><br /><br />
-  		<a href="subscription.php" style="color:blue; font-size:16px;">Click Here to Subscribe</a>
-  	</td>
   </tr>
 </table>
         </div>

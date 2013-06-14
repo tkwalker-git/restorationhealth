@@ -250,11 +250,9 @@ table .dele{
 									<li class="icon_myEvents"><a href="javascript:void(0)" style="cursor:default">UPDATE ACCOUNT</a>
 										<?php if($_SESSION['usertype']=='clinic' || $_SESSION['usertype']=='doctor'){ ?>
 										<ul>
-											<!-- <li><a href="settings.php" <?php if($_GET['p']==''){ echo "class='active'";} ?>>1. Update Your Calendars</a></li> -->
 											<li><a href="?p=my-profile" <?php if($_GET['p']=='my-profile'){ echo "class='active'";} ?>>My Profile</a></li>
-											<!-- <li><a href="?p=notifcations" <?php if($_GET['p']=='notifcations'){ echo "class='active'";} ?>>2. Setup Notifications</a></li> -->
-											<!-- <li><a href="?p=recommend" <?php if($_GET['p']=='recommend'){ echo "class='active'";} ?>>3. Invite</a></li> -->
-											<li><a href="?p=set_logo" <?php if($_GET['p']=='set_logo'){ echo "class='active'";} ?>>Update Your Logo</a></li>
+											<li><a href="?p=clinic-products" <?php if($_GET['p']=='clinic-products'){ echo "class='active'";} ?>>My Products</a></li>
+											<li><a href="?p=set_logo" <?php if($_GET['p']=='set_logo'){ echo "class='active'";} ?>>My Logo</a></li>
 
 										</ul>
 										<?php  } else {?>
@@ -280,6 +278,9 @@ table .dele{
 
 							if($_GET['p']=='my-profile')
 								include('my_profile.php');
+
+							elseif($_GET['p']=='clinic-products')
+								include_once("clinic_products.php");
 
 							elseif($_GET['p']=='set_logo')
 								include_once("set_logo.php");

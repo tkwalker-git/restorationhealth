@@ -44,23 +44,20 @@ location.reload();
 			<td width="45%" class="topleftright"><strong>Actions</strong></td>
 		</tr>
 		<?php
-			$sql = "select * from `plan` where `patient_id`='".$row['id']."' && clinic_id='".$_SESSION['LOGGEDIN_MEMBER_ID']."' order by id DESC";
-			$res = mysql_query($sql);
 			$sqlt="select * from plan where patient_id=".$_GET['id']." && clinic_id='".$_SESSION['LOGGEDIN_MEMBER_ID']."'";
 			$dfre=mysql_query($sqlt);
 			$no=1;
 			while($get_co_id=mysql_fetch_array($dfre)){
 
-					$row=mysql_fetch_array($res);
-
 					$gstst = $get_co_id['status'];
 
-					$stats_pat = $get_co_id['review_status']; ?>
+					$stats_pat = $get_co_id['review_status'];
+			?>
 
 					<tr>
-					<td class="botleft"><a target="_blank" href="view_plan_report.php?id=<?php echo $row['id']; ?>"style="color:#0066FF;"><?php echo  $row['plan_name'];?></a></td>
-					<td class="botleft"><a target="_blank" href="view_plan_report.php?id=<?php echo $row['id']; ?>"style="color:#0066FF;"><?php echo $row['plan_detail']; ?></td>
-					<td class="botleftright"><a target="_blank" href="view_plan_report.php?id=<?php echo $row['id']; ?>"style="color:#0066FF;"><?php echo date("M d, Y",strtotime($row['plan_date'])); ?></td>
+					<td class="botleft"><a target="_blank" href="view_plan_report.php?id=<?php echo $get_co_id['id']; ?>"style="color:#0066FF;"><?php echo  $get_co_id['plan_name'];?></a></td>
+					<td class="botleft"><a target="_blank" href="view_plan_report.php?id=<?php echo $get_co_id['id']; ?>"style="color:#0066FF;"><?php echo $get_co_id['plan_detail']; ?></td>
+					<td class="botleftright"><a target="_blank" href="view_plan_report.php?id=<?php echo $get_co_id['id']; ?>"style="color:#0066FF;"><?php echo date("M d, Y",strtotime($get_co_id['plan_date'])); ?></td>
 					<td class="botleftright">
 					<input type="radio" name="pri<?php echo $no; ?>" <?php if($gstst==1){?> checked="checked" <?php } ?> value="<?php echo $patient_id."_3";  ?>" onClick="chng_com_status('<?php echo $get_co_id['id']."_1";  ?>');">&nbsp;Keep Private&nbsp;&nbsp;&nbsp;
 					<input type="radio" name="pri<?php echo $no; ?>" <?php if($gstst==2){?> checked="checked" <?php } ?> value="<?php echo $patient_id."_4"; ?>" onClick="chng_com_status('<?php echo $get_co_id['id']."_2";  ?>');">&nbsp; Release to Patient&nbsp;&nbsp;&nbsp;

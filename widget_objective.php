@@ -34,32 +34,6 @@ location.reload();
 
   ?>
 
-
-<!--
-    <br />
-<div>
-	<table cellspacing="0" cellpadding="0" border="0" width="100%">
-      <tr>
-        <td width="23%" height="" align="left" valign="top" style="font-size:13px" ><div class="ew-heading">Visit Status</div> </td>
-		<td width="77%" height="" align="left" valign="top" style="font-size:13px" >
-
-		<form name="status" method="post" action="">
-		<div style="padding-top:7px;">
-		<input type="radio" name="release" value="3" <?php if($stats_pat==3){?> checked="checked" <?php } ?> onclick="fn_submit();" />&nbsp;Review Required&nbsp;&nbsp;
-		<input type="radio" name="release" value="4" <?php if($stats_pat==4){?> checked="checked" <?php } ?> onclick="fn_submit();" />&nbsp;
-		Release Plan&nbsp;&nbsp;
-		<input type="hidden" name="final" value="1" />
-	<input type="radio" name="release" value="2" <?php if($stats_pat==2){?> checked="checked" <?php } ?> onclick="fn_submit();" />&nbsp;	None
-		</div></form></td>
-      </tr>
-  </table>
-</div>
-
-
-<br /><br />
--->
-
-
    <?php } ?>
 
    	<div style="margin-top:30px;">
@@ -103,8 +77,8 @@ location.reload();
 
 					$gstst = $get_co_id['status'];
 
-					$stats_pat = $get_co_id['review_status']; ?>
-
+					$stats_pat = $get_co_id['review_status'];
+			?>
 
 
 					<tr>
@@ -119,7 +93,7 @@ location.reload();
 
 				</td>
 					</tr>
-					<!-- <tr><td class="botleftright"><?php echo $get_co_id['comment']; ?></td></tr> -->
+
 					<?php $no++;} 	?>
 	</table>
 
@@ -151,27 +125,27 @@ location.reload();
 		<tr>
 			<td width="38%" class="topleft"><strong>Tests Name</strong></td>
 			<td width="62%" class="topleftright"><strong>Comments</strong></td>
-		<!-- 	<td class="topleftright"><strong>Notes</strong></td> -->
 		</tr>
+
 		<?php
 			$sqlt="select * from plan where patient_id=".$_GET['id']." && clinic_id='".$_SESSION['LOGGEDIN_MEMBER_ID']."'";
 			$dfre=mysql_query($sqlt);
 			while($get_test_id=mysql_fetch_array($dfre)){
 			$pl_id=$get_test_id['id'];
 
-			 $sqlt="select * from `plan_test` where `patient_id`='".$_GET['id']."' && `plan_id`='".$pl_id."'";
+			$sqlt="select * from `plan_test` where `patient_id`='".$_GET['id']."' && `plan_id`='".$pl_id."'";
 			$res=mysql_query($sqlt);
 			$res12=mysql_num_rows($res);
 			if($res12)
 			{
 				while($row=mysql_fetch_array($res))
 				{
-					 $tstid=$row['test_id'];
+					$tstid=$row['test_id'];
 					$tcd=mysql_query("select * from tests where id='$tstid'");
 					while($asdf=mysql_fetch_array($tcd)){?>
 					<tr>
-					<td class="botleft"><?php echo $asdf['test_name']; ?></td>
-					<td class="botleftright"><?php echo $asdf['description']; ?></td>
+						<td class="botleft"><?php echo $asdf['test_name']; ?></td>
+						<td class="botleftright"><?php echo $asdf['description']; ?></td>
 					</tr>
 					<!-- <tr><td class="botleftright"><?php echo $asdf['test_name']; ?></td></tr> -->
 					<?php }

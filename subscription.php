@@ -3,6 +3,13 @@ include_once('admin/database.php');
 include_once('site_functions.php');
 include_once('admin/xmlparser.php');
 
+
+
+if($_GET['product_id']){
+    $product_id=$_GET['product_id'];
+    }
+
+
 $products = getChargifyProducts();
 
 if ( $_POST["clinic_product"] != ""){
@@ -47,8 +54,7 @@ $bc_doctor_last_name		=	DBin($_POST["doctor_last_name"]);
 $bc_doctor_first_name		=	DBin($_POST["doctor_first_name"]);
 $bc_dob					    =	$_POST["dob"];
 $bc_dob2					= 	$bc_dob;
-//$bc_dob					    =   date("Y-m-d",strtotime(str_replace("/","-",$bc_dob)));
-$bc_dob					    =   date("Y-m-d",strtotime($bc_dob));
+$bc_dob1					=   date("Y-m-d",strtotime($bc_dob));
 $bc_doctor_gender			=	DBin($_POST["doctor_gender"]);
 $bc_arr_doctor_gender		=	array("Male" => "Male", "FeMale" => "FeMale");
 $bc_clinic_address1			=	DBin($_POST["clinic_address1"]);
@@ -65,6 +71,7 @@ $bc_coupon					=	DBin($_POST["coupon"]);
 $usertype					=	1;
 $get_mon =explode('-',$bc_card_expire_date);
 $bc_month = trim($get_mon[0]);
+$bc_coupon = 'dwk7hiytkg';
 
 if($bc_coupon){
 $affiliate_id=getSingleColumn("id","select * from `users` where `affiliatemarketingcode`='$bc_coupon'");
@@ -175,6 +182,7 @@ if (isset($_POST["submit"]) )
 				$headers .= "Content-type:text/html;charset=iso-8859-1" . "\r\n";
 				$headers	.= 'From: Restorationhealth<info@yourhealthsupport.com>' . "\r\n";
 
+
 				mail($to ,$subject,$message, $headers);
 
 				mysql_query("insert into `subscription_detail` SET `clinic_id` = '".$bc_ClinicID."',`user_id` = '".$bc_cid."',`sub_id` = '".$bc_clinic_product."',`sub_title` = '".$bc_sub_title."',`sub_des` = '".$bc_sub_des."',`sub_price` = '".$bc_sub_price."',`sub_int` = '".$bc_sub_int."',`sub_int_unt` = '".$bc_int_unt."'");
@@ -274,17 +282,14 @@ if(val >= 1){
 </script>
 
 
-   <script>
-	$(function() {
-		$( "#dob" ).datepicker({
-			dateFormat: "mm/dd/yy",
-			changeMonth: true,
-			changeYear: true,
-			yearRange: '1940:2013'
-			});
-	});
 
-</script>
+
+
+
+
+
+
+
 <style>
 
 .ev_title input{
@@ -429,35 +434,46 @@ if(val >= 1){
                 <h3>Step 1 : <span>Purchase Summary:</span></h3>
 				<!--purchse summary box-->
 				<div id="box" class="box" style="padding-top:22px;">
-				<!--<div class="pur_top">5 Day Trial Period. No Obligations or Charges During Your Trial Period</div>
-				<div class="pur_bot"><span style="font-size:18px; font-weight:bold; padding-right:15px;">Today's Total: $0.00</span>(your subscription begins 5 days from today)</div>-->
 
 
-				<div>
-				<?php
-				$i=1;
-				$b=1;
-				foreach ($products as $key => $value){ ?>
-
-				<div class="pro_duct">
-				<input type="radio" name="clinic_product" value="<?php echo $key; ?>" <?php if($bc_clinic_product==$key || $i==$b){?> checked="checked" <?php } ?> />&nbsp;<strong><?php echo $products[$key][0]; ?>&nbsp;(<?php echo "$".$products[$key][1].".00"; ?>)</strong><br  />
-				<p><?php echo $products[$key][2]; ?></p>
-				<?php $res_val = $products[$key][3]; if($res_val >= 1){echo "<p>".$res_val."&nbsp;".$products[$key][4]."&nbsp;"."Trial Period. No Obligations or Charges During Your Trial Period"."</p>";}?>
-				</div>
-
-				<?php $i++; }?>
-				</div>
 
 
-				<table width="92%" border="0" cellspacing="15" cellpadding="0" align="center">
+
+<table width="92%" border="0" cellspacing="15" cellpadding="0" align="center">
   <tr>
     <td width="46%">
-	<strong>Referral Code</strong>:<br /><input type="text" name="coupon" class="new_input1" value="<?php echo $coupon; ?>" />
+	<strong>Please Enter Your Product Code</strong>:<br /><input type="text" id="coupon" name="coupon" class="new_input1" value="<?php echo $product_code; ?>" /><br />
+	<input type="button" value="Get Product" onclick="getProductDetail()"/><br>
+	<!--div id="result">Result...</div-->
 	</td>
     <td width="8%">&nbsp;</td>
     <td width="46%">&nbsp;</td>
   </tr>
 </table>
+
+
+			<div id="prd_details">
+				<?php
+				$product_id=$_GET['product_id'];
+				$key = $product_id;
+				if($_GET['product_id']){?>
+
+				<div class="pro_duct">
+					<input type="radio" name="clinic_product" value="<?php echo $key; ?>" <?php if($product_id==$key || $i==$b){?> checked="checked" <?php } ?> />&nbsp;
+					<strong><?php echo $products[$key][0]; ?>&nbsp;(<?php echo "$".$products[$key][1].".00"; ?>)</strong><br  />
+					<p><?php echo $products[$key][2]; ?></p>
+					<?php
+						$res_val = $products[$key][3];
+						if($res_val >= 1){
+							echo "<p>".$res_val."&nbsp;".$products[$key][4]."&nbsp;"."Trial Period. No Obligations or Charges During Your Trial Period"."</p>";
+							}
+					?>
+				</div>
+
+				<?php } ?>
+
+			</div>
+
 
 				</div>
 
@@ -583,7 +599,7 @@ if(val >= 1){
 	</select>	</td>
   </tr>
   <tr>
-    <td><strong>* Date of Birth</strong>:<br /><input type="text" name="dob" id="dob" class="new_input1" value="<?php echo $bc_dob; ?>" /></td>
+    <td><strong>* Date of Birth</strong>:<br /><input type="text" name="dob" id="dob" class="new_input1" value="<?php if($bc_dob2){ echo $bc_dob2;} ?>" /></td>
     <td>&nbsp;</td>
     <!-- <td><strong>* Doctor User Name</strong>:<br /><input type="text" name="doctor_username" class="new_input1" value="<?php echo $bc_doctor_username; ?>" /></td> -->
   </tr>
@@ -725,8 +741,56 @@ EnableSubmit = function(val)
 	});
 
 
+
+
+function getProductDetail()
+{
+	var pid	 	= $("#coupon").val();
+
+	$.ajax({
+
+			type: "POST",
+			url: "get_product.php",
+			data:"product_id="+pid,
+
+			beforeSend: function()
+			{
+				$("#prd_details").html('Loading Details...');
+			},
+
+			success: function(resp)
+			{
+				$("#prd_details").html(resp);
+			},
+
+			complete: function()
+			{
+			},
+
+			error: function(e)
+			{
+				//alert('Error: ' + e);
+			}
+	});
+}
+
 </script>
 
+
+
+
+
+<script>
+	$(function() {
+		$( "#dob" ).datepicker({
+			dateFormat: "mm/dd/yy",
+			changeMonth: true,
+			changeYear: true,
+			yearRange: '1940:2011'
+			});
+	});
+
+</script>
 
 <style>
 .pro_duct {

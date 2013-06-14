@@ -10,6 +10,7 @@ if(isset($_GET['vc']) && isset($_GET['ci']))
 		$in_id_patient =  getSingleColumn("id","select * from `patient_invitations` where `clinic_id`='$ci' && `verification_code`='$vc' && `status`='0'");
 		$have=mysql_num_rows($sqla);
 
+
 	if(!$have)
 		{
 			$sucMessage = "Error: Your Link is Untrusted";
@@ -107,7 +108,7 @@ if(strlen($bc_password) < 8)
 if (strpos($bc_password, " ") !== false)
 	$errors[] = 'Password Invalid: Your password cannot include spaces!';
 
-if (!preg_match("/[0-9]/", $bc_password))
+if (!preg_match("/[0-9]/", $password))
 	$errors[] = 'Password Invalid: Your password must include at least one number!';
 
 if (!preg_match("/[a-z]/i", $bc_password))
@@ -153,7 +154,19 @@ $err = '<table border="0" width="90%"><tr><td class="error" ><ul>';
 		{
 			if (!count($errors))
 				{
-					$emr_clinic_id		= attribValue('users', 'emr_clinic_id', "where id='". $_SESSION['LOGGEDIN_MEMBER_ID'] ."'");
+
+				if($_GET['ci'] || $_GET['vc'] )
+					{
+						$patient_clinic 	= getSingleColumn("clinic_id","select * from `patient_invitations` where `clinic_id`='$ci' && `verification_code`='$vc' && `status`='0'");
+						$emr_clinic_id		= attribValue('users', 'emr_clinic_id', "where id='". $patient_clinic ."'");
+					}
+
+					else
+					{
+						$emr_clinic_id		= attribValue('users', 'emr_clinic_id', "where id='". $_SESSION['LOGGEDIN_MEMBER_ID'] ."'");
+					}
+
+
 					$emr_patient_id 	= addpatient($emr_clinic_id,$bc_first_name,$bc_last_name,$bc_gender,$bc_dob,$bc_address,$bc_city,$bc_state,$bc_zip,$bc_phone,$bc_email,$bc_email,$bc_password);
 					$novi_id 			= get_novi_id('admin','Meghal123',1,$bc_first_name,$bc_last_name,$bc_email,$bc_email,$bc_password);
 
@@ -178,20 +191,23 @@ $err = '<table border="0" width="90%"><tr><td class="error" ><ul>';
 
 									$headers = "MIME-Version: 1.0" . "\r\n";
 									$headers .= "Content-type:text/html;charset=iso-8859-1" . "\r\n";
-									$headers	.= 'From: Restorationhealth<info@yourhealthsupport.com>' . "\r\n";
+									$headers	.= 'From: Restoration Health<info@yourhealthsupport.com>' . "\r\n";
 
 									mail($to ,$subject,$message, $headers);
 
 
 										if($_GET['ci'] || $_GET['vc'] )
 											{
-												echo "<script>window.location.href='user_login.php';</script>";
+												$sucMessage = "Patient Invitation Registration: Record Successfully inserted.";
+												echo "Patient Clinic:". $patient_clinic . "<br />". "EMR Clinic ID:". $emr_clinic_id . "<br />". "EMR Patient ID:". $emr_patient_id . "<br />"."Novi ID:". $novi_id . "<br />";
+												/* echo "<script>window.location.href='user_login.php';</script>"; */
 											}
 
 											if ($res)
 												{
-													$sucMessage = "Record Successfully inserted.";
-													echo "<script>window.location.href='clinic_manager.php?p=patient&id=$frmID';</script>";
+													$sucMessage = "Patient Registration: Record Successfully Inserted.";
+													echo "Patient Clinic:". $patient_clinic . "EMR Clinic ID:". $emr_clinic_id . "<br />". "EMR Patient ID:". $emr_patient_id . "<br />"."Novi ID:". $novi_id . "<br />";
+													/* echo "<script>window.location.href='clinic_manager.php?p=patient&id=$frmID';</script>"; */
 												}
 											else
 												{
@@ -226,8 +242,9 @@ $err = '<table border="0" width="90%"><tr><td class="error" ><ul>';
 
 							if ($res)
 								{
-									$sucMessage = "Record Successfully updated.";
-									echo "<script>window.location.href='clinic_manager.php?p=patient&id=$frmID';</script>";
+									$sucMessage = "Patient Update: Record Successfully updated.";
+									echo "EMR Clinic ID:". $emr_clinic_id . "<br />". "EMR Patient ID:". $emr_patient_id . "<br />"."Novi ID:". $novi_id . "<br />";
+									/* echo "<script>window.location.href='clinic_manager.php?p=patient&id=$frmID';</script>"; */
 								}
 							else
 								{
@@ -532,16 +549,20 @@ jQuery(function($){
                 </div>
 
 
-
-
-
                   <div class="clear"><br /></div>
                   <br /><br />
 
 
 
-				        <div class="create_event_submited">
-            <a href="<?php echo ABSOLUTE_PATH; ?>dr_patient.php"><input type="image" src="<?php echo IMAGE_PATH; ?>submit-btn.png" name="submit" value="Create Test" align="right" /></a>
+
+
+
+
+				  <input type="checkbox" name="termsofuse" value="1" onclick="EnableSubmit(this)" />&nbsp;By checking this box you agree with the <span><a href="#A" class="lbLink" onclick='window.open("terms-of-use.php","Window1","menubar=no,width=980,height=800,toolbar=no,scrollbars=yes");' >Terms of Service</a></span>
+
+
+				        <div align="center">
+            <a href="<?php echo ABSOLUTE_PATH; ?>dr_patient.php"><input type="submit" name="submit" id="sbmt" value="Submit" style="padding:8px 30px; font-size:16px; font-weight:bold;"  /></a>
             <input type="hidden" name="submit" value="Create Test" />
         </div>
 
@@ -556,10 +577,43 @@ jQuery(function($){
 </div>
 <?php include_once('includes/footer.php');?>
 
-<script language="javascript" type="text/javascript" src="<?php echo ABSOLUTE_PATH; ?>js/jquery-ui_1.8.7.js"></script>
-<link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.11/themes/humanity/jquery-ui.css" type="text/css" media="all" />
-<script type="text/javascript" src="js/jquery.ui.datepicker.js"></script>
+
+
+<script src="<?php echo ABSOLUTE_PATH; ?>eventDatesPicker/happy_default.js?0" type="text/javascript"></script>
+<script src="<?php echo ABSOLUTE_PATH; ?>eventDatesPicker/happy_event_edit.js" type="text/javascript"></script>
+<link rel="stylesheet" type="text/css" href="<?php echo ABSOLUTE_PATH; ?>eventDatesPicker/calendar.css" />
+<link href="<?php echo ABSOLUTE_PATH; ?>eventDatesPicker/happy_event_edit.css?0" media="screen" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="<?php echo ABSOLUTE_PATH; ?>js/jquery-1.4.2.min.js"></script>
+<script type="text/javascript" src="<?php echo ABSOLUTE_PATH; ?>js/jquery-1.4.2.min2.js"></script>
+<script type="text/javascript" src="<?php echo ABSOLUTE_PATH; ?>js/jquery.accordion.js"></script>
+<script type="text/javascript" src="<?php echo ABSOLUTE_PATH; ?>admin/js/jquery.autocomplete.js"></script>
+<link rel="stylesheet" type="text/css" href="<?php echo ABSOLUTE_PATH; ?>admin/css/jquery.autocomplete.css" />
+<script type="text/javascript" src="<?php echo ABSOLUTE_PATH; ?>js/jquery.tipsy.js"></script>
+<script src="<?php echo ABSOLUTE_PATH; ?>calendar/jquery.ui.core.js"></script>
+<link rel="stylesheet" href="<?php echo ABSOLUTE_PATH; ?>calendar/jquery.ui.theme.css">
+<link rel="stylesheet" href="<?php echo ABSOLUTE_PATH; ?>calendar/jquery.ui.datepicker.css">
+<script type="text/javascript" src="<?php echo ABSOLUTE_PATH; ?>calendar/jquery.ui.datepicker.js"></script>
+
+
 <script>
+
+var sbmt2 = document.getElementById("sbmt");
+sbmt2.disabled = true;
+
+EnableSubmit = function(val)
+{
+    var sbmt = document.getElementById("sbmt");
+
+    if (val.checked == true)
+    {
+        sbmt.disabled = false;
+    }
+    else
+    {
+        sbmt.disabled = true;
+    }
+}
+
 	$(function() {
 		$( "#dob" ).datepicker({
 			dateFormat: "mm/dd/yy",

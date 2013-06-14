@@ -1,10 +1,10 @@
 <?php
-include_once('admin/database.php'); 
+include_once('admin/database.php');
 include_once('site_functions.php');
 
 if (!$_SESSION['LOGGEDIN_MEMBER_ID']>0)
 		echo "<script>window.location.href='login.php';</script>";
-		
+
 if($_GET["id"]){
 if(validateEID($_SESSION['LOGGEDIN_MEMBER_ID'],'events',$_GET['id'],'') =='false'){
 echo "<script>window.location.href='activity_manager.php';</script>";
@@ -84,7 +84,7 @@ $errors = array();
 	$bc_city				=	$_POST['city'];
 	if($bc_city == 'City')
 		$bc_city	=	'';
-		
+
 	$bc_zip					=	$_POST['zip'];
 	if($bc_zip == 'Zip / Postal Code')
 		$bc_zip	=	'';
@@ -112,8 +112,10 @@ $errors = array();
 		$errors[] = 'Please enter Event Title';
 	if ( trim($bc_event_description) == '' )
 		$errors[] = 'Please enter Doctor\'s Bio';
+/*
 	if ( trim($_FILES["event_image"]["name"]) == '' && $_POST['mn_image']=='' )
-		$errors[] = 'Please select Clinic Log';
+		$errors[] = 'Please select Clinic Logo';
+*/
 /*
 	if ( trim($bc_category_id) == '' )
 		$errors[] = 'Please select Primary Category ';
@@ -133,7 +135,7 @@ $errors = array();
 	if (!count($errors)) {
 
 		if($frmID){
-			
+
 			if (isset($_FILES["event_image"]) && !empty($_FILES["event_image"]["tmp_name"])){
 				$tmp_bc_name  = time() . "_" . $_FILES["event_image"]["name"] ;
 				$tmp_bc_name	=	str_replace(" ","_", $tmp_bc_name);
@@ -141,8 +143,8 @@ $errors = array();
 				makeThumbnail($tmp_bc_name, 'event_images/', '', 275, 375,'th_');
 				$sql_img = " , `event_image` = '". $tmp_bc_name ."' ";
 			}
-			
-		
+
+
 		$bs	=	getSingleColumn('id',"select * from `events` where `event_name`='$bc_event_name' && `id`='$frmID'");
 		if($bs){
 			$bc_seo_name	=	'';
@@ -150,9 +152,9 @@ $errors = array();
 		else{
 			$bc_seo_name	=	"`seo_name` = '$bc_seo_name', ";
 		}
-		
+
 		$bc_event_status = $_POST['event_status'];
-	
+
 		$bc_location_image	= '';
 		if ($_FILES['location_image']) {
 			$liname = $_FILES['location_image']['name'];
@@ -165,8 +167,8 @@ $errors = array();
 				$location_img_sql	= ", `location_img` = '". $li_image ."'";
 			}
 		}
-		
-		
+
+
 		$bc_assessment_image	= '';
 		if ($_FILES['assessment_image']) {
 			$ainame		= $_FILES['assessment_image']['name'];
@@ -182,49 +184,49 @@ $errors = array();
 
 			$sql = "UPDATE `events` SET `event_name` = '". $bc_event_name ."', ". $bc_seo_name ." `doctor_type` = '". $bc_doctor_type ."', `event_description` = '". $bc_event_description ."' ". $sql_img .", `location_name` = '". $bc_location_name ."', `address` = '". $bc_address ."', `city` = '". $bc_city ."', `zip` = '". $bc_zip ."' ". $location_img_sql ." , `assessment_url` = '". $bc_assessment_url ."' ". $assessment_sql ." , `assessment_detail` = '". $bc_assessment_detail ."'   WHERE `id` = '". $frmID ."'";
 			$res = mysql_query($sql);
-		
+
 		if($res){
 			$event_id	=	$frmID;
-			
+
 		//	$event_url		= getEventURL($event_id);
-		
-		
+
+
 		mysql_query("DELETE from `event_videos` where `event_id`='$event_id'");
-		
+
 		mysql_query("UPDATE `event_gallery` SET `name` = '$bc_gallery' WHERE `event_id` = '$event_id'");
 
 	$gallery_id	=	getSingleColumn('id',"select * from `event_gallery` where `event_id`='$frmID'");
-	
+
 	if($gallery_id==''){
 		mysql_query("INSERT INTO `event_gallery` (`id`, `name`, `event_id`) VALUES (NULL, '$bc_gallery', '$event_id')");
 		$gallery_id	=	mysql_insert_id();
-	}	
+	}
 
 
 	if ( is_array($_FILES['images']) ) {
 			for($i=0;$i< count($_FILES['images']['name']); $i++) {
 				$einame = $_FILES['images']['name'][$i];
 				$etname = $_FILES['images']['tmp_name'][$i];
-				
+
 				if ( $einame != '') {
-				
+
 					$einame = str_replace(' ', '_',$einame);
-					$ei_image = time() . '_' . $einame; 
+					$ei_image = time() . '_' . $einame;
 					move_uploaded_file($etname, 'event_images/gallery/'.$ei_image);
 					makeThumbnail($ei_image, 'event_images/gallery/', '', 120, 92,'th_');
 					makeThumbnail($ei_image, 'event_images/gallery/', '', 480, 600,'sub_');
 					//@unlink('images/products/'.$ei_image);
-					
+
 					if ( $ei_image != '' && $gallery_id > 0 ){
 					mysql_query("INSERT INTO `event_gallery_images` (`id`, `image`, `gallery_id`) VALUES (NULL, '$ei_image', '$gallery_id')");
-					
+
 					}
-				}		
+				}
 			}
 		}
-		
-		
-		
+
+
+
 			$sucMessage = "Event Successfully updated";
 		}
 		else{
@@ -232,7 +234,7 @@ $errors = array();
 		}
 	}
 	else{
-		
+
 		$bc_image = '';
 		//if (isset($_FILES["event_image"]) && !empty($_FILES["event_image"]["tmp_name"])) {
 		if ( $_SESSION['UPLOADED_TMP_NAME'] != '' ) {
@@ -241,8 +243,8 @@ $errors = array();
 				makeThumbnail($bc_image, 'event_images/', '', 163, 200,'th_');
 				$sql_img = " event_image = '$bc_image' , ";
 		}
-		
-		
+
+
 		$bc_location_image	= '';
 		if ($_FILES['location_image']) {
 			$liname = $_FILES['location_image']['name'];
@@ -254,7 +256,7 @@ $errors = array();
 				makeThumbnail($li_image, 'images/', '', 460, 318,'th_');
 			}
 		}
-		
+
 		$bc_assessment_image	= '';
 		if ($_FILES['assessment_image']) {
 			$ainame		= $_FILES['assessment_image']['name'];
@@ -267,7 +269,7 @@ $errors = array();
 			}
 		}
 
-		$bc_source_id	=	"USER-".rand(); 
+		$bc_source_id	=	"USER-".rand();
 		$bc_added_date	=	 date("Y-m-d");
 
 		if($is_private)
@@ -332,17 +334,17 @@ $errors = array();
 ///// ADD VIDEO END /////
 
 
-	
+
 ////////////////////////// //////
-	
+
 	if ($bc_venu_id != ''){
 				$sql_venue = "insert into venue_events (venue_id, event_id) values('" . $bc_venu_id . "','" . $event_id . "')";
-				mysql_query($sql_venue);	
+				mysql_query($sql_venue);
 			}
-			
+
 			if($bc_event_music){
 				foreach($bc_event_music as $bc_event_music_value){
-					$sql_event_music = "insert ignore into event_music (event_id, music_id) values('" . $event_id . "','" . $bc_event_music_value . "')";			
+					$sql_event_music = "insert ignore into event_music (event_id, music_id) values('" . $event_id . "','" . $bc_event_music_value . "')";
 					mysql_query($sql_event_music);
 				}
 			}
@@ -353,7 +355,7 @@ $errors = array();
 		$custom_order_id = time();
 		$date		=	date('Y-m-d');
 		$res = mysql_query("INSERT INTO `orders` (`id`, `userid`, `total_price`, `discount`, `net_total`, `date`, `type`, `main_ticket_id`, `coupon_code`, `order_id`) VALUES (NULL, '$userid', '1', '', '', '$date', 'premium', '$event_id', '', '$custom_order_id')");
-		
+
 		echo "<script>window.location.href='".ABSOLUTE_PATH."saved.php?type=event&id=".$event_id."'</script>";
 	/*	echo "<script>window.location.href='".ABSOLUTE_PATH_SECURE."create_flyer_step2.php?id=".$event_id."'</script>";	  */
 		}
@@ -362,7 +364,7 @@ $errors = array();
 		}
 	}
 	} // end if $res
-	
+
 	else{
 		$sucMessage	=	$err;
 	}
@@ -404,7 +406,7 @@ if($sucMessage == "Event Successfully updated"){
 	$eventPy		= getSingleColumn("id","select * from `orders` where `main_ticket_id`='$event_id' && `type`='flyer' && `total_price`!=''");
 	 if($_GET['r']=='py' || $eventPy=='' || $eventPy==0){
 	/*	echo "<script>window.location.href='".ABSOLUTE_PATH_SECURE."create_flyer_step2.php?id=".$event_id."'</script>";  */
-		echo "<script>window.location.href='".$event_url."'</script>";	
+		echo "<script>window.location.href='".$event_url."'</script>";
 		}
 	else{
 		echo "<script>window.location.href='".$event_url."'</script>";
@@ -416,7 +418,7 @@ if ($frmID){
 	$res = mysql_query($qry);
 	while($row = mysql_fetch_array($res)){
 
-		$bc_event_source 		=	$row["event_source"]; 
+		$bc_event_source 		=	$row["event_source"];
 		$bc_source_id			=	$row["source_id"];
 		$bc_fb_event_id			=	$row["fb_event_id"];
 		$bc_userid				=	$row["userid"];
@@ -471,7 +473,7 @@ if ($frmID){
 			}
 		}
 
-	
+
 		$event_id = $frmID;
 
 	}
@@ -526,7 +528,7 @@ $(document).ready(function() {
 	});
 
 	var unique = $('input.unique');
-	unique.click(function(){ 
+	unique.click(function(){
 		unique.removeAttr('checked');
 		$(this).attr('checked', true);
 	});
@@ -572,10 +574,10 @@ $(document).ready(function() {
 
 function add_more_image(id){
 //	var limitImage = 5;
-//	if(id!=limitImage){  
+//	if(id!=limitImage){
 	var next_row 	= id+1;
 	var new_url_feild = '<div class="ev_fltlft" style="width:50%; padding:5px 0" id="showimg'+next_row+'"><input type="file" name="images[]" /><img style="padding: 3px 5px 0 0;cursor:pointer" src="images/icon_delete2.gif" align="left" onclick="remove_image('+next_row+')"></div>';
-	$('#add_more_image_area').append(new_url_feild);	
+	$('#add_more_image_area').append(new_url_feild);
 	$('#add_more_image_btn').html('<img src="images/add_more.png" style="cursor:pointer" id="" onclick="add_more_image('+next_row+')" />');
 //	}
 //	else{
@@ -596,10 +598,10 @@ function remove_image(id){
 
 function add_more_video(id){
 //	var limitVideos = 5;
-//	if(id!=limitVideos){  
+//	if(id!=limitVideos){
 	var next_row 	= id+1;
 	var new_url_feild = '<div id="showvid'+next_row+'"><div style="float:left; width:380px; margin-right:20px"><div id="head" style="padding:16px 0 12px; font-size:22px">Video Name:</div><input type="text" name="video_name[]" value="Enter the name of your video" id="video_name'+next_row+'" onFocus="removeText(this.value,\'Enter the name of your video\',\'video_name'+next_row+'\');" onBlur="returnText(\'Enter the name of your video\',\'video_name'+next_row+'\');" class="new_input" style="width:350px;"><img style="padding: 3px 0 0 0;cursor:pointer" src="images/icon_delete2.gif" align="right" onclick="remove_video('+next_row+')"></div><div style="float:left; width:454px; margin-right:20px"><div id="head" style="padding:16px 0 12px; font-size:22px">Copy and Paste the Video Embed Code Here:</div><textarea class="new_input" name="video_embed[]" style="width:466px; height:130px;"></textarea></div><div class="clr"></div></div></div>';
-	$('#add_more_video_area').append(new_url_feild);	
+	$('#add_more_video_area').append(new_url_feild);
 	$('#add_more_video_btn').html('<img src="images/add_more.png" style="cursor:pointer" id="" onclick="add_more_video('+next_row+')" />');
 //	}
 //	else{
@@ -616,7 +618,7 @@ function remove_video(id){
 	c = b[0]-1;
 
 	$('#add_more_video_btn').html('<img src="images/add_more.png" style="cursor:pointer" id="" onclick="add_more_video('+c+')" />');
-	
+
 }
 
 
@@ -664,8 +666,8 @@ $(document).ready(function(){
 	float:left;
 	position:absolute
 	}
-	
-	
+
+
 .ev_new_box_center .basic_box ul, .ev_new_box_center .featured_box ul, .ev_new_box_center .premium_box ul, .ev_new_box_center .custom_box ul{
 	padding:10px 0 0 18px;
 	margin:0
@@ -684,19 +686,19 @@ $(document).ready(function(){
 	background:url(images/featured_box.gif) no-repeat;
 	left:234px;
 	}
-	
+
 .ev_new_box_center .premium_box{
 	background:url(images/premium_box.gif) no-repeat;
 	left:468px;
 	}
-	
+
 .ev_new_box_center .custom_box{
 	background:url(images/custom_box.gif) no-repeat;
 	left:702px;
 	}
-	
-	
-.ev_new_box_center .basic_box .black, .ev_new_box_center .featured_box .black, .ev_new_box_center .premium_box .black, .ev_new_box_center .custom_box .black{	
+
+
+.ev_new_box_center .basic_box .black, .ev_new_box_center .featured_box .black, .ev_new_box_center .premium_box .black, .ev_new_box_center .custom_box .black{
 	filter:alpha(opacity=15);
 	-ms-filter:alpha(opacity=15);
 	-moz-opacity:0.15;
@@ -706,17 +708,17 @@ $(document).ready(function(){
 	height:528px;
 	position:absolute;
 	}
-	
-	
+
+
 .ev_new_box_center .black:hover{
 	display:none;
 	}
-	
+
 .ev_new_box_center .basic_box:hover > .black, .ev_new_box_center .featured_box:hover > .black, .ev_new_box_center .premium_box:hover > .black, .ev_new_box_center .custom_box:hover > .black{
 	display:none;
 	}
-	
-	
+
+
 .ev_new_box_center .basic_box:hover, .ev_new_box_center .featured_box:hover, .ev_new_box_center .premium_box:hover, .ev_new_box_center .custom_box:hover{
 	z-index:9999;
 	-moz-box-shadow:0px 0px 7px 2px #464646;
@@ -735,7 +737,7 @@ $(document).ready(function(){
 	font-family:Arial, Helvetica, sans-serif;
 	line-height:18px;
 }
-	
+
 #showimg1,#showimg3{
 	padding: 5px 0 5px 20px;
 	width: 45%
@@ -767,7 +769,7 @@ $(document).ready(function(){
 			//	if($bc_event_type!=0 && $pym==0){
 			//		$disabled = 'yes';
 			//	}
-		
+
 		?>
 			<!--	<strong>Your event is currently	</strong>   -->
 			<?php
@@ -821,7 +823,7 @@ $(document).ready(function(){
                     <textarea name="event_description" id="event_description" class="bc_input" style="width:825px; height:250px"><?php echo $bc_event_description; ?></textarea>
                   </div>
                 </div>
-                
+
                 <h3>STEP 2 | <span>ADD GALLERIES</span></h3>
                 <div id="box" class="box">
                  <div id="head">Photo Gallery:
@@ -836,10 +838,10 @@ $(document).ready(function(){
 					 if(is_array($bc_gallery_images)){
 					 $count_images = count($bc_gallery_images);
 					 for ($z=0;$z < $count_images;$z++){
-						
+
 						$gallery_images		= $bc_gallery_images[$z];
 						$gallery_images_id	= $bc_gallery_images_id[$z];
-						
+
 							if($gallery_images!=''){
 							$i++;
 							if($bc_event_type==1){
@@ -868,13 +870,13 @@ $(document).ready(function(){
 								if($i%2==0){
 								echo '<div class="clr"></div>';
 								}
-								
+
 								}
-							} 
 							}
-							
+							}
+
 							if(count($bc_gallery_images)<4){
-							
+
 							$lp =	4 - count($bc_gallery_images);
 							for($s=0;$s < $lp;$s++){
 							$i++;
@@ -888,7 +890,7 @@ $(document).ready(function(){
 								}
 							}
 							}
-							
+
 							}
 							else{?>
                     <div class="ev_fltlft" id="showimg1">
@@ -906,7 +908,7 @@ $(document).ready(function(){
                     </div>
                     <?php
 							}
-							
+
 				   if($bc_event_type==1){?>
                     <div id="add_more_image_area"></div>
                     <div class="clr"></div>
@@ -948,7 +950,7 @@ $(document).ready(function(){
                       </div>
                       <div class="clr"></div>
                     </div>
-                    <?php				
+                    <?php
 
 							} // END FOR
 							} // END if is_array
@@ -974,21 +976,21 @@ $(document).ready(function(){
                       <span id="add_more_video_btn"><img src="<?php echo IMAGE_PATH; ?>add_more.png" style="cursor:pointer" id="" onClick="add_more_video(<?php if ($count_videos){echo $count_videos;} else{ echo "1"; } ?>)" /></span> </div>
                     <?php } ?>
                   </div>
-                  
+
                 </div>
-                
+
                 <h3>STEP 3 | <span>ADD SHOWCASE ATTRIBUTES</span></h3>
-                <div id="box" class="box"> 
-                
-                
+                <div id="box" class="box">
+
+
                 <div id="head">Clinic Logo:
                     <div class="info" id="info4" title="This is the main Clinic Logo we will use for your advertising. Make sure the image you upload is a high quality, appropriate image."></div>
                 </div>
-                
+
                 <div class="ev_fltlft">
-					<?php 
+					<?php
                     if( $bc_image != ''  ) {
-	                    if ( substr($bc_image,0,7) != 'http://' && substr($bc_image,0,8) != 'https://' ) 
+	                    if ( substr($bc_image,0,7) != 'http://' && substr($bc_image,0,8) != 'https://' )
     		                $bc_image1 = ABSOLUTE_PATH . 'event_images/th_'.$bc_image;
             	        else
 							$bc_image1 = $bc_image;
@@ -1001,7 +1003,7 @@ $(document).ready(function(){
                     <input type="file" name="event_image" /><br />
                 </div>
                 <br class="clear" />
-                <div id="head">Clinic Location</div>
+                <div id="head">Event Location</div>
 				<input type="text" name="location_name" id="location_name" class="new_input" value="<?php if ($bc_location_name){ echo $bc_location_name; }else{ echo "Location Name"; } ?>" onFocus="removeText(this.value,'Location Name','location_name');" onBlur="returnText('Location Name','location_name');" style="margin-bottom:2px; width:200px" />
                   &nbsp;&nbsp;
                   <input type="text" name="address" id="ev_address1" class="new_input" value="<?php if ($bc_address){ echo $bc_address; } else{ echo 'Address'; } ?>"  onFocus="removeText(this.value,'Address','ev_address1');" onBlur="returnText('Address','ev_address1');" style="width:200px">
@@ -1010,8 +1012,8 @@ $(document).ready(function(){
                   &nbsp;&nbsp;
                   <input type="text" name="zip" id="ev_zip" class="new_input" value="<?php if ($bc_zip){ echo $bc_zip; } else{ echo 'Zip / Postal Code'; } ?>"  onFocus="removeText(this.value,'Zip / Postal Code','ev_zip');" onBlur="returnText('Zip / Postal Code','ev_zip');" style="width:190px">
                   <br>
-				<div id="head">Clinic Location Image</div>
-                <?php 
+				<div id="head">Event Location Image</div>
+                <?php
                     if( $bc_location_img != ''  ) {
 							$bc_image1 = $bc_location_img;
 						echo '<img src="'.IMAGE_PATH.$bc_location_img.'" class="dynamicImg" id="del_location_img" width="75" height="76" align="left" style="padding:3px"  />';
@@ -1021,15 +1023,15 @@ $(document).ready(function(){
                     <?php } ?>
                     <br class="clear" />
                     <input type="file" name="location_image" /><br />
-                    
+
                 <div id="head">Assessment Summary</div>
                 <div>
                 	<textarea name="assessment_detail" id="assessment_detail" class="bc_input" style="width:825px; height:250px"><?php echo $bc_assessment_detail; ?></textarea>
                 </div>
-                
+
                 <div id="head">Assessment demo image</div>
-                
-                <?php 
+
+                <?php
                     if( $bc_assessment_image != ''  ) {
 						$bc_image1 = $bc_assessment_image;
 						echo '<img src="'.IMAGE_PATH.$bc_assessment_image.'" class="dynamicImg" id="del_assessment_image" width="75" height="76" align="left" style="padding:3px"  />';
@@ -1040,8 +1042,8 @@ $(document).ready(function(){
                     <br class="clear" />
                     <input type="file" name="assessment_image" /><br />
                     <br class="clear" />
-    
-                <div id="head">Link to take Assessment</div>  
+
+                <div id="head">Link to take Assessment</div>
                   	<input type="trex" class="new_input" value="<?php echo $bc_assessment_url; ?>" name="assessment_url" style="width:350px;" />
                 </div>
               </div>
@@ -1049,16 +1051,16 @@ $(document).ready(function(){
           </div>
         </div>
         <div class="create_event_submited">
-        
-		
+
+
           <img src="<?php echo IMAGE_PATH; ?>publish_new.png" name="create" value="Create Event" style="cursor:pointer" onClick="save();"  align="right" />
-        
+
 		<?php
-		
+
 		 if( $_GET['id'] && $bc_event_type == 1 ){
 		 	echo '<a href="'.ABSOLUTE_PATH_SECURE.'fbflayer/index.php?id='.$frmID.'" class="fancybox2"><img src="'.IMAGE_PATH.'/preview_new.png" align="right"  /></a>';
 		 }
-		 
+
 		 if($_GET['id']==''){
 		?>
          <!-- <img src="<?php echo IMAGE_PATH; ?>save_as_draft_new.png" alt="" value="Save As Draft" title="Save As Draft" onClick="draft();" style="cursor:pointer" align="right">-->
@@ -1097,8 +1099,8 @@ $(document).ready(function(){
 		// Example content CSS (should be your site CSS)
 		content_css : "style.css",
 	});
-	
-	
+
+
 $(".delImg").click(function(){
 	var con = confirm("Are you sure you want to delete this image?");
 	if( con == true ) {
@@ -1113,7 +1115,7 @@ $(".delImg").click(function(){
 	if(imgInfo[5]=='showfile'){
 	$('#'+imgInfo[6]).css('display','block');
 	$('#showimg'+imgInfo[6]).html('<input type="file" name="images[]" />');
-	
+
 	}
 	}
 });
@@ -1133,6 +1135,6 @@ $(".delImg").click(function(){
 		}
 			$("#z_listing_event_form").attr("action", "");
 			$("#z_listing_event_form").submit();
-	} 
+	}
 
 </script>

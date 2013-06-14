@@ -20,8 +20,11 @@ if($_POST) {
 
 
 
-  $chk_final_status = mysql_query("select * from patient_comments where clinic_id='".$_SESSION['LOGGEDIN_MEMBER_ID']."' && patient_id='".$pat_id."' && review_status=3");
-    $fin_res_rev = mysql_num_rows($chk_final_status);
+   	$chk_final_status1 = mysql_query("select * from patient_comments where clinic_id='".$_SESSION['LOGGEDIN_MEMBER_ID']."' && patient_id='".$pat_id."' && review_status=3");
+    $fin_res_rev1 = mysql_num_rows($chk_final_status1);
+    $chk_final_status2 = mysql_query("select * from plan where clinic_id='".$_SESSION['LOGGEDIN_MEMBER_ID']."' && patient_id='".$pat_id."' && review_status=3");
+    $fin_res_rev2 = mysql_num_rows($chk_final_status2);
+    $fin_res_rev = $fin_res_rev1 + $fin_res_rev2;
   if(!$fin_res_rev) {
 	mysql_query("update patients set status='4' where id='".$pat_id ."'");
   }else{

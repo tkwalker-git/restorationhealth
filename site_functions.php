@@ -382,6 +382,56 @@ try {
 
 }
 
+
+function UpdateDoctor($emr_clinic_id,$emr_doctor_id,$fname,$lname,$email,$gender,$dob2,$email,$password){
+$aParametres = array("ClinicID"  =>  $emr_clinic_id,
+						"DoctorID"  =>  $emr_doctor_id,
+						"DoctorsFirstName"  =>  $fname,
+						"DoctorsLastName"  =>  $lname,
+						"DoctorsEmail"  =>  $email,
+						"DoctorsSex"  =>  $gender,
+						"DoctorsDOB"  =>  $dob2,
+						"DoctorsUserName"  =>  $email,
+						"DoctorsPassword"  =>  $password
+                     );
+
+try {
+            $options = array(
+                'soap_version'=>SOAP_1_2,
+                'exceptions'=>true,
+                'trace'=>1,
+                'cache_wsdl'=>WSDL_CACHE_NONE
+            );
+            $client = new SoapClient('https://yourhealthsupport.com:8443/WebApplication6/PangeaWS?WSDL', $options);
+			//var_dump($client->__getFunctions());
+
+            $results = $client->UpdateDoctor( array("parameter"=> $aParametres));
+			//var_dump($client);
+			//var_dump($results);
+
+			 $reference = $results->return->DoctorID;
+			 $errorStr	= $results->return->ErrorString;
+
+			if($reference != '' ){
+				$resu= $reference;
+
+			}else {
+				$resu = 'Error: '. $errorStr;
+			}
+
+
+        } catch (Exception $e) {
+            echo "<h2>Exception Error with EMR Interface!</h2>";
+            echo $e->getMessage();
+        }
+
+		/* return $resu; */
+		return $resu;
+
+}
+
+
+
 function AddAppointmentRequest($emr_session_id,$emr_patient_id,$request_time,$emr_doctor_id,$bc_comments){
 $aParametres = array("sessionId"  =>  $emr_session_id,
 						"patientID"  =>  $emr_patient_id,
@@ -424,7 +474,7 @@ try {
 
 }
 
-function addpatient($clinicid,$fname,$lname,$sex,$dob,$address,$city,$state,$zip,$phone,$email,$username,$password){
+function AddPatient($clinicid,$fname,$lname,$sex,$dob,$address,$city,$state,$zip,$phone,$email,$username,$password){
 $aParametres = array("ClinicID" => "$clinicid",
 					 "FirstName" => "$fname",
                       "LastName" => "$lname",
@@ -437,6 +487,62 @@ $aParametres = array("ClinicID" => "$clinicid",
 					  "Phone" => "$phone",
 					  "Email" => "$email",
 					  "UserName" => "$username",
+					  "Password" => "$password"
+                     );
+
+
+
+
+		try {
+           		 $options = array(
+                'soap_version'=>SOAP_1_2,
+                'exceptions'=>true,
+                'trace'=>1,
+                'cache_wsdl'=>WSDL_CACHE_NONE
+            );
+
+            $client = new SoapClient('https://yourhealthsupport.com:8443/WebApplication6/PangeaWS?WSDL', $options);
+			//var_dump($client->__getFunctions());
+
+            $results = $client->AddPatient( array("parameter"=> $aParametres));
+			//var_dump($client);
+
+
+			//var_dump($results);
+
+			 $reference = $results->return->PatientID;
+
+			if($reference != ''){
+				$resu= $reference;
+			}else {
+				$resu= -1;
+			}
+
+
+        } catch (Exception $e) {
+            echo "<h2>Exception Error!</h2>";
+            echo $e->getMessage();
+        }
+	return $resu;
+
+}
+
+
+function UpdatePatient($emr_clinic_id,$emr_patient_id,$fname,$lname,$gender,$dob2,$address,$address2,$city,$state,$zip,$phone,$email,$email,$password){
+$aParametres = array("ClinicID" => "$emr_clinic_id",
+					 "PatientID" => "$emr_patient_id",
+                      "FirstName" => "$fname",
+					  "LastName" => "$lname",
+					  "Sex" => "$gender",
+					  "DOB" => "$dob2",
+					  "AddressLine1" => "$address",
+					  "AddressLine2" => "$address2",
+					  "City" => "$city",
+					  "State" => "$state",
+					  "Zip" => "$zip",
+					  "Phone" => "$phone",
+					  "Email" => "$email",
+					  "UserName" => "$email",
 					  "Password" => "$password"
                      );
 

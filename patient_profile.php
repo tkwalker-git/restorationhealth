@@ -2,7 +2,7 @@
 
 	if ( isset($_POST['continue']) )
 	{
-		
+
 		$fname 			=	DBin($_POST['fname']);
 		$lname 			=	DBin($_POST['lname']);
 		$email 			=	DBin($_POST['email']);
@@ -15,52 +15,59 @@
 		$cpassword 		=	DBin($_POST['cpassword']);
 		$com_website	=	DBin($_POST['com_website']);
 		$dob 			=	$_POST['dob'];
+		$dob2			= 	$bc_dob;
+		$dob 			= date("Y-m-d", strtotime($dob));
 		$company_name	=	$_POST['company_name'];
 		$venue_name		=	$_POST['venue_name'];
-		//	$dob			=	str_replace("/","-", $dob);
-		$dob 			= date("Y-m-d", strtotime($dob));
+		$address2		= " ";
+		$state			= " ";
 
-		
+
+		$clinic_id		= attribValue('patients', 'clinicid', "where id='". $_SESSION['LOGGEDIN_MEMBER_ID'] ."'");
+		$emr_clinic_id	= attribValue('users', 'emr_clinic_id', "where id='". $clinic_id ."'");
+		$emr_patient_id	= attribValue('patients', 'genensysuserid', "where id='". $_SESSION['LOGGEDIN_MEMBER_ID'] ."'");
+		$patient_update	= UpdatePatient($emr_clinic_id,$emr_patient_id,$fname,$lname,$gender,$dob2,$address,$address2,$city,$state,$zip,$phone,$email,$email,$password);
+
 		if ( trim($fname) == '' )
 			$errors[] = 'Please enter First Name';
 		if ( trim($lname) == '' )
 			$errors[] = 'Please enter Last Name';
-		
+
 		if ( trim($password) != '' || trim($cpassword) != '' ) {
 			if ( trim($password) != trim($cpassword))
-				$errors[] = 'Confirm Password does not match.';			
-		} 
-		
-		if ( !validateEmail($email) ) 
+				$errors[] = 'Confirm Password does not match.';
+		}
+
+		if ( !validateEmail($email) )
 			$errors[] = 'Email Address is invalid.';
-			
+
 		if ( trim($phone) == '' )
-			$errors[] = 'Please enter your Phone Number';	
-		
+			$errors[] = 'Please enter your Phone Number';
+
 		if ( trim($address) == '' )
-			$errors[] = 'Please enter your Mailing Address';	
-		
+			$errors[] = 'Please enter your Mailing Address';
+
 		if ( trim($city) == '' )
 			$errors[] = 'Please enter your Mailing City';
-		
+
 		if ( trim($zip) == '' )
 			$errors[] = 'Please enter your Mailing Zipcode';
-		
+
 		if ( count( $errors) > 0 ) {
-		
+
 			$err = '<table border="0" width="90%"><tr><td class="error" ><ul>';
 			for ($i=0;$i<count($errors); $i++) {
 				$err .= '<li>' . $errors[$i] . '</li>';
 			}
-			$err .= '</ul></td></tr></table>';	
+			$err .= '</ul></td></tr></table>';
 		} else {
-			
-			
-			if ( trim($password) != '' && trim($cpassword) != '' ) 
+
+
+			if ( trim($password) != '' && trim($cpassword) != '' )
 				$pwd = "password='". $password ."',";
 			else
 				$pwd = "";
-			
+
 			$bc_image	= time() . "_" . $_FILES["image_name"]["name"] ;
 			$bc_image	= str_replace(" ","_", $bc_image);
 			if (isset($_FILES["image_name"]) && !empty($_FILES["image_name"]["tmp_name"])){
@@ -71,8 +78,8 @@
 			//		makeRoundedThumbnail($bc_image, 'images/group/icon/', 'images/frameOver.gif');
 				$sql_img = ", image_name = '$bc_image' ";
 			}
-			
-			
+
+
 			$bc_logo_image  = time() . "_" . $_FILES["logo_name"]["name"];
 			$bc_logo_image	= str_replace(" ","_", $bc_logo_image);
 			if (isset($_FILES["logo_name"]["name"]) && !empty($_FILES["logo_name"]["tmp_name"])){
@@ -83,23 +90,23 @@
 			//		makeRoundedThumbnail($bc_image, 'images/group/icon/', 'images/frameOver.gif');
 				$sql_company_logo = ", company_logo = '$bc_logo_image' ";
 			}
-			
-			
-			
+
+
+
 	$sql = "update patients set phone='$phone',address='$address',city='$city',zip='$zip',firstname='$fname',lastname='$lname',email='$email',sex='$gender',".  $pwd ."dob='$dob' " . $sql_img . " where id='". $member_id ."'";
 			if ( mysql_query($sql) ){
 				mysql_query("update `promoter_detail` set `business_name`='$company_name', `com_website`='$com_website', `venue_name`='$venue_name' ".$sql_company_logo." where `promoterid`='".$member_id."'");
 				echo "<script>window.location.href='?p=patint-notifcations'</script>";
 				}
-		}	
-			
+		}
+
 	}
-	
-	
+
+
 	$sql = "select * from patients where id=" . $member_id;
 	$res = mysql_query($sql);
 	if ( $row = mysql_fetch_assoc($res) ) {
-		
+
 		$name 		= DBout($row['firstname']);
 		$lname 		= DBout($row['lastname']);
 		$email  	= DBout($row['email']);
@@ -111,13 +118,13 @@
 		$usern  	= DBout($row['username']);
 		$dob  		= DBout($row['dob']);
 		$password	= DBout($row['password']);
-		
+
 		if ( $dob == '0000-00-00' )
 			$dob = '';
-		
+
 		if ( $dob != '' )
 			$dob = date("m/d/Y",strtotime($dob));
-		
+
 		$image	= DBout($row['image_name']);
 		$bc_image  = $image;
 		if ($image != '' && file_exists(DOC_ROOT . 'images/members/' . $image ) ) {
@@ -129,7 +136,7 @@
 ?>
 <style>
 .whiteMiddle .evField {
-	
+
 	}
 
 .whiteMiddle .evField {
@@ -137,21 +144,21 @@
 	font-size:15px;
 	width:134px;
 	}
-	
+
 .evLabal{
 	font-size:15px;
 	}
-	
+
 .evInput{
 	font-size:14px;
 	}
-	
+
 </style>
     <style type="text/css">
 .ew-heading{
 	color: #49BA8D;
     font-size: 24px;}
-	
+
 .ew-heading a{
 	color: #FF7A57;
     float: right;
@@ -168,13 +175,13 @@
 	color: #212121;
     font-size: 20px;}
     </style>
-    
-    
+
+
 <div class="yellow_bar"> &nbsp; UPDATE YOUR PROFILE</div>
 <!-- /yellow_bar -->
 <div style="padding:0 10px;"><br />
 <div class="error"><?php echo $err; ?></div>
-	
+
 
 	<div class="ew-heading">Personal Information</div>
 
@@ -187,26 +194,26 @@
         <input type="text" name="fname" class="evInput" style="width:300px; height:20px" value='<?php echo $name;?>' />
       </div>
       <div class="clr"></div>
-      
+
       <div class="evField">Last Name</div>
       <div class="evLabal">
         <input type="text" name="lname" class="evInput" style="width:300px; height:20px" value='<?php echo $lname;?>' />
       </div>
       <div class="clr"></div>
-      
+
       	<div class="evField">Email</div>
       <div class="evLabal">
         <input type="text" name="email" class="evInput" style="width:300px; height:20px" value='<?php echo $email;?>'/>
-      </div>      
+      </div>
       <div class="clr"></div>
-      
+
       <div class="evField">Phone Number</div>
       <div class="evLabal">
         <input type="text" name="phone" class="evInput" style="width:300px; height:20px" value='<?php echo $phone;?>'/>
-      </div>      
+      </div>
       <div class="clr"></div>
-      
-  
+
+
 	  <div class="evField">Birth Date</div>
       <div class="evLabal">
         <input type="text" name="dob" id="dob" readonly="true" class="evInput" style=" width:200px; height:20px"  value="<?php echo $dob;?>" />
@@ -222,11 +229,11 @@
 																	yearRange: '1940:2011'
 																});
 										});
-										
+
 									</script>
       </div>
       <div class="clr"></div>
-	  
+
 	  <div class="evField">Gender</div>
       <div class="evLabal">
         <select id="gender" class="evInput" name="gender" style="padding:3px; width:200px">
@@ -236,11 +243,11 @@
         </select>
       </div>
       <div class="clr"></div>
-	  
+
       <div class="evField">Profile Picture</div>
       <div class="evLabal">
-        <?php 
-		
+        <?php
+
 			if ($bc_image != '' && file_exists(DOC_ROOT . 'images/members/' . $bc_image ) ) {
 					$img = returnImage( ABSOLUTE_PATH . 'images/members/' . $bc_image,127,2000 );
 				echo '<img '.$img.' align="left" style="padding-right:10px;" /><br>';
@@ -252,12 +259,12 @@
         <input type="file" class="addEInput" name="image_name" id="image_name"  />
       </div>
       <div class="clr"></div>
-      
+
       <br /><br />
-	
+
 
 	<div class="ew-heading">Mailing Address</div>
-	
+
 	 <div class="evField">Street Address</div>
       <div class="evLabal">
         <input type="text" name="address" class="evInput" style="width:300px; height:20px" value='<?php echo $address;?>' />
@@ -268,15 +275,15 @@
         <input type="text" name="city" class="evInput" style="width:300px; height:20px" value='<?php echo $city;?>' />
       </div>
       <div class="clr"></div>
-      
+
       <div class="evField">Zipcode</div>
       <div class="evLabal">
         <input type="text" name="zip" class="evInput" style="width:300px; height:20px" value='<?php echo $zip;?>'/>
       </div>
       <div class="clr"></div><br /><br />
-	  
-	      
-	
+
+
+
 	<div class="ew-heading">Change Password</div>
 	<div class="evField">Password</div>
       <div class="evLabal">
@@ -284,22 +291,22 @@
         <br>
         <font size="-1" color="red">Leave blank if you don't want to change</font>
 	  </div>
-	  
+
 	  <div class="evField">Confirm Password</div>
       <div class="evLabal">
 	  	<input type="text" name="cpassword" class="evInput" style="width:300px; height:20px;" value="" />
 	  </div>
 
-	
+
     </div>
- 
+
 	<div align="right"><br /><br />
-		
+
 		<input type="image" src="<?php echo IMAGE_PATH; ?>save_&_continue.png" align="right" name="continue" value="Save & Continue" style="padding:10px 0 0 10px;" />
 		<a href="?p=patint-notifcations"><img src="<?php echo IMAGE_PATH; ?>skip.png" align="right"  style="padding:10px 0 0 10px;" /></a>
-		<input type="hidden" name="continue" value="Save & Continue" />&nbsp; 
+		<input type="hidden" name="continue" value="Save & Continue" />&nbsp;
 		  <br class="clr" />&nbsp;
 	</div>
-	
+
 	</form>
 </div>
