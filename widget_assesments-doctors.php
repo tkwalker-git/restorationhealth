@@ -8,10 +8,10 @@
       </tr>
     </table>
 	<br/>
-	
+
 	<div class="yellow_bar">
 	<table cellspacing="0" cellpadding="0" border="0" width="100%">
-		<tr>		
+		<tr>
 		<td width="25%" class="topleft"><strong>Assessment Name</strong></td>
 		<td width="20%" class="topleft"><strong>Start Date</strong></td>
 		<td width="25%" class="topleftright"><strong>View Report</strong></td>
@@ -25,17 +25,17 @@
 			if(mysql_num_rows($res)>0)
 			while($row = mysql_fetch_array($res))
 			{
-					
+
 		?>
 			<tr>
 			<td class="botleft">
 			<a target="_blank" href="survey_view.php?id=<?php echo $row['mnoviforms_id']; ?>&frmID=<?php echo $row['mnoviforms_id'];?>&patient=<?php echo $_GET['id']; ?>&rev=<?php echo $row['Revision']; ?>"style="color:#0066FF;">
 			<?php echo  $row['FormName']."_".$row['Revision']; ?>
-			</a>    
+			</a>
 			</td>
 			<td class="botleft"><?php echo date("M d, Y \-\-\-\t\ g:ia",strtotime($row['date_started'])); ?></td>
-			<!-- <td class="botleft"><?php echo $row['date_completed']; ?></td>	 -->		
-			<td class="botleftright">&nbsp;<a target="_blank" href="survey_view.php?id=<?php echo $row['mnoviforms_id']; ?>&frmID=<?php echo $row['mnoviforms_id'];?>&patient=<?php echo $_GET['id']; ?>"style="color:#0066FF;">View Report</a></td>
+			<!-- <td class="botleft"><?php echo $row['date_completed']; ?></td>	 -->
+			<td class="botleftright">&nbsp;<a target="_blank" href="survey_view.php?id=<?php echo $row['mnoviforms_id']; ?>&frmID=<?php echo $row['mnoviforms_id'];?>&patient=<?php echo $_GET['id']; ?>&rev=<?php echo $row['Revision']; ?>"style="color:#0066FF;">View Report</a></td>
 			<!-- <td class="botleftright"><a href="survey_report.php?resid=<?php echo $row['response_id']; ?>&frmID=<?php echo $row['mnoviforms_id'];?>">Report</a></td> -->
 			</tr>
 			<?php }

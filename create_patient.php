@@ -199,19 +199,19 @@ $err = '<table border="0" width="90%"><tr><td class="error" ><ul>';
 										if($_GET['ci'] || $_GET['vc'] )
 											{
 												$sucMessage = "Patient Invitation Registration: Record Successfully inserted.";
-												echo "Patient Clinic:". $patient_clinic . "<br />". "EMR Clinic ID:". $emr_clinic_id . "<br />". "EMR Patient ID:". $emr_patient_id . "<br />"."Novi ID:". $novi_id . "<br />";
-												/* echo "<script>window.location.href='user_login.php';</script>"; */
+												/* echo "Patient Clinic:". $patient_clinic . "<br />". "EMR Clinic ID:". $emr_clinic_id . "<br />". "EMR Patient ID:". $emr_patient_id . "<br />"."Novi ID:". $novi_id . "<br />"; */
+												echo "<script>window.location.href='user_login.php';</script>";
 											}
 
 											if ($res)
 												{
 													$sucMessage = "Patient Registration: Record Successfully Inserted.";
-													echo "Patient Clinic:". $patient_clinic . "EMR Clinic ID:". $emr_clinic_id . "<br />". "EMR Patient ID:". $emr_patient_id . "<br />"."Novi ID:". $novi_id . "<br />";
-													/* echo "<script>window.location.href='clinic_manager.php?p=patient&id=$frmID';</script>"; */
+													/* echo "Patient Clinic:". $patient_clinic . "EMR Clinic ID:". $emr_clinic_id . "<br />". "EMR Patient ID:". $emr_patient_id . "<br />"."Novi ID:". $novi_id . "<br />"; */
+													echo "<script>window.location.href='clinic_manager.php?p=patient&id=$frmID';</script>";
 												}
 											else
 												{
-													$sucMessage = "Error Code 1: Please try Later";
+													$sucMessage = "Error Code 1: Please try again";
 												} // end if res
 								}
 								else
@@ -243,8 +243,8 @@ $err = '<table border="0" width="90%"><tr><td class="error" ><ul>';
 							if ($res)
 								{
 									$sucMessage = "Patient Update: Record Successfully updated.";
-									echo "EMR Clinic ID:". $emr_clinic_id . "<br />". "EMR Patient ID:". $emr_patient_id . "<br />"."Novi ID:". $novi_id . "<br />";
-									/* echo "<script>window.location.href='clinic_manager.php?p=patient&id=$frmID';</script>"; */
+									/* echo "EMR Clinic ID:". $emr_clinic_id . "<br />". "EMR Patient ID:". $emr_patient_id . "<br />"."Novi ID:". $novi_id . "<br />"; */
+									echo "<script>window.location.href='clinic_manager.php?p=patient&id=$frmID';</script>";
 								}
 							else
 								{
@@ -435,16 +435,6 @@ jQuery(function($){
                   </div>
                 </div>
 
-<!--
-				<div class="bxs">
-                  <div id="head">Username</div>
-                  <div>
-                    <input type="text" name="user_name" style="color:#000" id="user_name" class="new_input" value="<?php echo $bc_user_name; ?>"/>
-					<div id='username_availability_result'></div>
-                  </div>
-                </div>
--->
-
 
 
 				 <div class="bxs">
@@ -558,11 +548,11 @@ jQuery(function($){
 
 
 
-				  <input type="checkbox" name="termsofuse" value="1" onclick="EnableSubmit(this)" />&nbsp;By checking this box you agree with the <span><a href="#A" class="lbLink" onclick='window.open("terms-of-use.php","Window1","menubar=no,width=980,height=800,toolbar=no,scrollbars=yes");' >Terms of Service</a></span>
+				  <input type="checkbox" name="termsofuse" value="1" onclick="EnableSubmit(this)" />&nbsp;By checking this box you agree with the <span><a href="#A" class="lbLink" onclick='window.open("terms-of-use-patient.php","Window1","menubar=no,width=980,height=800,toolbar=no,scrollbars=yes");' >Terms of Service</a></span>
 
 
 				        <div align="center">
-            <a href="<?php echo ABSOLUTE_PATH; ?>dr_patient.php"><input type="submit" name="submit" id="sbmt" value="Submit" style="padding:8px 30px; font-size:16px; font-weight:bold;"  /></a>
+            <a href="<?php echo ABSOLUTE_PATH; ?>dr_patient.php"><input type="submit" name="submit" id="sbmt" value="Submit" style="padding:8px 30px; font-size:16px; font-weight:bold;" <a onclick="return confirm('Notice: This registration could take up to 30 seconds to process. We appreciate your patience.  Click OK to proceed...');"> </a>
             <input type="hidden" name="submit" value="Create Test" />
         </div>
 

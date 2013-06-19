@@ -1,11 +1,11 @@
 <?php
-include_once('admin/database.php'); 
+include_once('admin/database.php');
 include_once('site_functions.php');
 
 if (!$_SESSION['LOGGEDIN_MEMBER_ID']>0)
 		echo "<script>window.location.href='login.php';</script>";
 
-if($_GET["id"]){	
+if($_GET["id"]){
 	if (validateID($_SESSION['LOGGEDIN_MEMBER_ID'],'plan',$_GET["id"]) =='false'){
 		echo "<script>window.location.href='clinic_manager.php?p=plans';</script>";
 		}
@@ -16,32 +16,33 @@ $sql = "select * from `patients` where `id`='".$_GET['pn']."'";
 	$r	=	mysql_query($sql);
 	while($ro = mysql_fetch_array($r)){
 	$bc_patient_address		=	$ro['address'];
-	$bc_patient_name		=	$ro['firstname']." ".$ro['lastname'];
-	$bc_patient_city		=	$ro['city'];
-	$bc_patient_zip			=	$ro['zip'];
-	$patient_id				=	$ro['id'];
+	$bc_patient_name			=	$ro['firstname']." ".$ro['lastname'];
+	$bc_patient_city				=	$ro['city'];
+	$bc_patient_zip				=	$ro['zip'];
+	$patient_id						=	$ro['id'];
+	$bc_arr_patient_id			=	$ro['id'];
 	}
-	
+
 if (validateID($_SESSION['LOGGEDIN_MEMBER_ID'],'patients',$_GET["pn"]) =='false')
 		echo "<script>window.location.href='clinic_manager.php?p=plans';</script>";
 }
-	
 
 
-$bc_clinic_id		=	$_SESSION['LOGGEDIN_MEMBER_ID'];
-$bc_patient_id		=	$_POST["patient_id"];
-$bc_plan_name		=	$_POST["plan_name"];
-$bc_plan_detail		=	$_POST["plan_detail"];
-$bc_tests			=	$_POST["tests"];
+
+$bc_clinic_id				=	$_SESSION['LOGGEDIN_MEMBER_ID'];
+$bc_patient_id			=	$_POST["patient_id"];
+$bc_plan_name			=	$_POST["plan_name"];
+$bc_plan_detail			=	$_POST["plan_detail"];
+$bc_tests					=	$_POST["tests"];
 $bc_supplements		=	$_POST["supplements"];
-$bc_start_date		=	$_POST["start_date"];
-$bc_end_date		=	$_POST["end_date"];
-$bc_protocol		=	$_POST["protocol"];
-$bc_plan_date		=	date("Y-m-d");
+$bc_start_date			=	$_POST["start_date"];
+$bc_end_date			=	$_POST["end_date"];
+$bc_protocol				=	$_POST["protocol"];
+$bc_plan_date			=	date("Y-m-d");
 
 
-	$frmID	=	$_GET["id"];
-	
+$frmID	=	$_GET["id"];
+
 
 $action1 = isset($_POST["bc_form_action"]) ? $_POST["bc_form_action"] : "";
 
@@ -51,18 +52,21 @@ $sucMessage = "";
 $errors = array();
 if ($bc_clinic_id == "")
 	$errors[] = "clinic id can not be empty";
-if ($_POST["patient_id"] == "")
-	$errors[] = "patient id can not be empty";
+
 if ($_POST["plan_name"] == "")
 	$errors[] = "plan name can not be empty";
+
 if ($_POST["plan_detail"] == "")
 	$errors[] = "plan detail can not be empty";
+
+if ($_POST["patient_id"] == "")
+	$errors[] = "patient id can not be empty.  PatientID value is: "."$bc_patient_id";
 
 $err = '<table border="0" width="90%"><tr><td class="error" ><ul>';
 for ($i=0;$i<count($errors); $i++) {
 	$err .= '<li>' . $errors[$i] . '</li>';
 }
-$err .= '</ul></td></tr></table>';	
+$err .= '</ul></td></tr></table>';
 
 if (isset($_POST["submit"]) ) {
 
@@ -72,7 +76,7 @@ if (isset($_POST["submit"]) ) {
 			$sql	=	"insert into plan (clinic_id,patient_id,plan_name,plan_detail,plan_date) values ('" . $bc_clinic_id . "','" . $bc_patient_id . "','" . $bc_plan_name . "','" . $bc_plan_detail . "','" . $bc_plan_date . "')";
 			$res	=	mysql_query($sql);
 			$frmID = mysql_insert_id();
-			
+
 			if($bc_tests){
 			if(is_array($bc_tests)){
 				foreach($bc_tests as $bc_test_id){
@@ -80,14 +84,14 @@ if (isset($_POST["submit"]) ) {
 				}
 			}
 		}
-		
+
 		if (is_array($bc_protocol) ) {
 
 			for($f=0;$f <count($bc_protocol);$f++) {
 				$bc_protocola =	$bc_protocol[$f];
-				$start_date	=	date('Y-m-d',strtotime($bc_start_date[$f])); 
+				$start_date	=	date('Y-m-d',strtotime($bc_start_date[$f]));
 				$end_date	=	date('Y-m-d',strtotime($bc_end_date[$f]));
-				
+
 					if($bc_protocola!=''){
 						mysql_query("INSERT INTO `plan_protocol` (`id`, `plan_id`, `patient_id`, `protocol_id`,`start_date`,`end_date`,clinic_id) VALUES (NULL, '$frmID', '$bc_patient_id', '$bc_protocola','$start_date','$end_date','$bc_clinic_id')");
 					}
@@ -102,7 +106,7 @@ if (isset($_POST["submit"]) ) {
 				}
 			}
 		}
-			
+
 			if ($res) {
 				$sucMessage = "Record Successfully inserted.";
 				echo "<script>window.location.href='clinic_manager.php?p=plans&id=$frmID';</script>";
@@ -110,14 +114,14 @@ if (isset($_POST["submit"]) ) {
 				$sucMessage = "Error 1: Please try Later";
 			} // end if res
 		} // end if
-		
+
 		if ($action1 == "edit") {
 			$sql	=	"update plan set clinic_id = '" . $bc_clinic_id . "', patient_id = '" . $bc_patient_id . "', plan_name = '" . $bc_plan_name . "', plan_detail = '" . $bc_plan_detail . "', plan_date = '" . $bc_plan_date . "' where id=$frmID";
 			$res	=	mysql_query($sql);
-			
-			
+
+
 			if($bc_tests){
-				
+
 			if(is_array($bc_tests)){
 			mysql_query("delete from `plan_test` where plan_id='$frmID'");
 				foreach($bc_tests as $bc_test_id){
@@ -125,17 +129,17 @@ if (isset($_POST["submit"]) ) {
 				}
 			}
 		}
-		
+
 		if (is_array($bc_protocol) ) {
-		
+
 			mysql_query("delete from `plan_protocol` where plan_id='$frmID'");
 
 			for($f=0;$f <count($bc_protocol);$f++) {
 				$bc_protocola =	$bc_protocol[$f];
-				$start_date	=	date('Y-m-d',strtotime($bc_start_date[$f])); 
+				$start_date	=	date('Y-m-d',strtotime($bc_start_date[$f]));
 
 				$end_date	=	date('Y-m-d',strtotime($bc_end_date[$f]));
-				
+
 					if($bc_protocola!=''){
 						mysql_query("INSERT INTO `plan_protocol` (`id`, `plan_id`, `patient_id`, `protocol_id`,`start_date`,`end_date`) VALUES (NULL, '$frmID', '$bc_patient_id', '$bc_protocola','$start_date','$end_date')");
 					}
@@ -144,7 +148,7 @@ if (isset($_POST["submit"]) ) {
 
 
 		if($bc_supplements){
-			
+
 			if(is_array($bc_supplements)){
 			mysql_query("delete from `plan_supplement` where plan_id='$frmID'");
 				foreach($bc_supplements as $bc_supplement_id){
@@ -152,7 +156,7 @@ if (isset($_POST["submit"]) ) {
 				}
 			}
 		}
-		
+
 			if ($res) {
 				$sucMessage = "Record Successfully updated.";
 				echo "<script>window.location.href='clinic_manager.php?p=plans&id=$frmID';</script>";
@@ -190,7 +194,7 @@ if ($res) {
 	$bc_patient_city		=	$ro['city'];
 	 $bc_patient_zip		=	$ro['zip'];
 	}
-	
+
 $sql = "select * from `plan_test` where `plan_id`='$frmID'";
 	$r	=	mysql_query($sql);
 	while($ro = mysql_fetch_array($r)){
@@ -202,11 +206,11 @@ $sql = "select * from `plan_test` where `plan_id`='$frmID'";
 	while($ro = mysql_fetch_array($r)){
 	$bc_supplements[]		=	$ro['supplement_id'];
 	}
-	
+
 	$bc_protocol		=	array();
 	$bc_start_date		=	array();
 	$bc_end_date		=	array();
-	
+
 	$sql = "select * from `plan_protocol` where `plan_id`='$frmID'";
 	$r	=	mysql_query($sql);
 	while($ro = mysql_fetch_array($r)){
@@ -230,10 +234,10 @@ include_once('includes/header.php');
     $(document).ready(function() {
 
         $('.savedate').datepicker();
-		     
+
     });
     </script>
-	
+
 
 <script src="<?php echo ABSOLUTE_PATH; ?>eventDatesPicker/happy_default.js?0" type="text/javascript"></script>
 <script type="text/javascript" src="http://yui.yahooapis.com/2.7.0/build/yuiloader/yuiloader-min.js"></script>
@@ -277,12 +281,12 @@ function remove(value){
 
 
 function add_more_protocol(id){
-	
+
 	var limitprotocols = 10;
-	if(id!=limitprotocols){  
+	if(id!=limitprotocols){
 	var next_row 	= id+1;
 	var new_url_feild = '<div id="proto'+next_row+'"><div style="float:left; width:240px; margin-right:20px"><div id="head" style="padding:16px 0 12px; font-size:22px">Start Date</div><input type="text" name="start_date[]" id="start_date'+next_row+'" class="start_date'+next_row+' savedate" style="width:200px;"></div><div style="float:left; width:240px; margin-right:20px"><div id="head" style="padding:16px 0 12px; font-size:22px">Select Protocol</div><select style="width:180px;" class="new_input" name="protocol[]" id="protocol"> <?php $af_id	=get_affiliate(); $res = mysql_query("select * from `protocols` where `clinic_id`='". $_SESSION['LOGGEDIN_MEMBER_ID'] ."' || `clinic_id`='".$af_id."'");while($row = mysql_fetch_array($res)){?><option value="<?php echo $row['id']; ?>" <?php if(is_array($bc_protocols) && in_array($row['id'],$bc_protocols)){ echo 'selected="selected"'; } ?>><?php echo $row['protocol_title']; ?></option><?php } ?></select></div><div style="float:left; width:250px; margin-right:20px"><div id="head" style="padding:16px 0 12px; font-size:22px">End Date</div><input type="text" name="end_date[]" id="end_date'+next_row+'" class="end_date'+next_row+' savedate" style="width:200px;"><img style="padding: 3px 0 0 0;cursor:pointer" src="images/icon_delete2.gif" align="right" onclick="remove_protocol('+next_row+')"></div> <div class="clr"></div></div></div>';
-	$('#add_more_protocol_area').append(new_url_feild);	
+	$('#add_more_protocol_area').append(new_url_feild);
 	$('#add_more_protocol_btn').html('<img src="images/add_more.png" style="cursor:pointer" id="" onclick="add_more_protocol('+next_row+')" />');
 	}
 	else{
@@ -304,7 +308,7 @@ function remove_protocol(id){
 	c = b[0]-1;
 
 	$('#add_more_protocol_btn').html('<img src="images/add_more.png" style="cursor:pointer" id="" onclick="add_more_protocol('+c+')" />');
-	
+
 }
 
 
@@ -322,7 +326,7 @@ return false;
 }
 	$("#z_listing_event_form").attr("action", "");
 	$("#z_listing_event_form").submit();
-} 
+}
 
 $(document).ready(function() {
 			$("#patient_name").autocomplete("<?php echo ABSOLUTE_PATH; ?>get_patient_list.php", {
@@ -382,20 +386,20 @@ $(document).ready(function(){
 	height:48px;
 	padding:0 16px;
 	}
-	
+
 .ev_new_box_center{
 	margin:auto;
 	width:936px;
 	}
-	
+
 .ev_new_box_center .basic_box, .ev_new_box_center .featured_box, .ev_new_box_center .premium_box, .ev_new_box_center .custom_box{
 	width:234px;
 	height:528px;
 	float:left;
 	position:absolute
 	}
-	
-	
+
+
 .ev_new_box_center .basic_box ul, .ev_new_box_center .featured_box ul, .ev_new_box_center .premium_box ul, .ev_new_box_center .custom_box ul{
 	padding:10px 0 0 18px;
 	margin:0
@@ -414,19 +418,19 @@ $(document).ready(function(){
 	background:url(images/featured_box.gif) no-repeat;
 	left:234px;
 	}
-	
+
 .ev_new_box_center .premium_box{
 	background:url(images/premium_box.gif) no-repeat;
 	left:468px;
 	}
-	
+
 .ev_new_box_center .custom_box{
 	background:url(images/custom_box.gif) no-repeat;
 	left:702px;
 	}
-	
-	
-.ev_new_box_center .basic_box .black, .ev_new_box_center .featured_box .black, .ev_new_box_center .premium_box .black, .ev_new_box_center .custom_box .black{	
+
+
+.ev_new_box_center .basic_box .black, .ev_new_box_center .featured_box .black, .ev_new_box_center .premium_box .black, .ev_new_box_center .custom_box .black{
 	filter:alpha(opacity=15);
 	-ms-filter:alpha(opacity=15);
 	-moz-opacity:0.15;
@@ -436,17 +440,17 @@ $(document).ready(function(){
 	height:528px;
 	position:absolute;
 	}
-	
-	
+
+
 .ev_new_box_center .black:hover{
 	display:none;
 	}
-	
+
 .ev_new_box_center .basic_box:hover > .black, .ev_new_box_center .featured_box:hover > .black, .ev_new_box_center .premium_box:hover > .black, .ev_new_box_center .custom_box:hover > .black{
 	display:none;
 	}
-	
-	
+
+
 .ev_new_box_center .basic_box:hover, .ev_new_box_center .featured_box:hover, .ev_new_box_center .premium_box:hover, .ev_new_box_center .custom_box:hover{
 	z-index:9999;
 	-moz-box-shadow:0px 0px 7px 2px #464646;
@@ -465,7 +469,7 @@ $(document).ready(function(){
 	font-family:Arial, Helvetica, sans-serif;
 	line-height:18px;
 }
-	
+
 #showimg1,#showimg3{
 	padding: 5px 0 5px 20px;
 	width: 45%
@@ -515,8 +519,8 @@ function showTh(value,id){
                   <div id="head" style="margin-top:30px;">Patient Name</div>
                   <div>
                     <input type="text" name="patient_name" id="patient_name" class="new_input" value="<?php if ($bc_patient_name){ echo $bc_patient_name; }else{ echo "Start Typing Patient Name"; } ?>" onfocus="removeText(this.value,'Start Typing Patient Name','patient_name');" onblur="returnText('Start Typing Patient Name','patient_name');" style="margin-bottom:2px; width:200px" />
-                    <input type="hidden" name="patient_id" id="patient_id" value="<?php if($bc_patient_id){echo $bc_patient_id;}else { echo $bc_arr_patient_id; }  ?>" />
-                    &nbsp;&nbsp;
+                    <input type="hidden" name="patient_id" id="patient_id" value="<?php if($frmID){echo $frmID;}else { echo $bc_arr_patient_id; }  ?>" />
+                  &nbsp;&nbsp;
                     <input type="text" name="address1" disabled="disabled" id="pt_address1" class="new_input" value="<?php if ($bc_patient_address){ echo $bc_patient_address; } else{ echo 'Address'; } ?>"  onFocus="removeText(this.value,'Address','pt_address1');" onBlur="returnText('Address','ev_address1');" style="width:200px">
                     &nbsp;&nbsp;
                     <input type="text" name="city" disabled="disabled" id="pt_city" class="new_input" value="<?php if ($bc_patient_city){ echo $bc_patient_city; } else{ echo 'City'; } ?>"  onFocus="removeText(this.value,'City','pt_city');" onBlur="returnText('City','pt_city');" style="width:150px">
@@ -526,32 +530,32 @@ function showTh(value,id){
                     <div class="clr"></div>
                   </div>
                   <div id="head" style="margin-top:30px;">Add Protocols</div>
-				  
+
                   <div>
-				  
+
 				<?php    $i=0;
-				
+
 					if(is_array($bc_protocol) && count($bc_protocol) > 0){
-					
+
 					  $aid = count($bc_protocol);
 					 for ($z=0;$z <$aid;$z++){
 
-						
+
 						 $bc_protocol1		= $bc_protocol[$z];
 						 $start_date		= $bc_start_date[$z];
 						 $end_date			= $bc_end_date[$z];
 						 $i++;
-							
+
 							if( $i <=1 ){?>
-							
+
 <div id="proto">
-  
+
     <div style="float:left; width:240px; margin-right:20px">
     <div id="head" style="padding:16px 0 12px; font-size:16px; width:240px; color:black">Select Protocol</div>
 				<select style="width:240px;" class="new_input" name="protocol[]" id="protocol">
                       <?php
-					  		if(get_affiliate() && get_affiliate() != ""){	
-							$af_id	=get_affiliate();				  		
+					  		if(get_affiliate() && get_affiliate() != ""){
+							$af_id	=get_affiliate();
 							$res = mysql_query("select * from `protocols` where `clinic_id`='". $_SESSION['LOGGEDIN_MEMBER_ID'] ."' || `clinic_id`='$af_id' ORDER BY protocol_title ASC");
 							}else {
 							$res = mysql_query("select * from `protocols` where `clinic_id`='". $_SESSION['LOGGEDIN_MEMBER_ID'] ."' ORDER BY protocol_title ASC");
@@ -562,38 +566,38 @@ function showTh(value,id){
                       <?php } ?>
                     </select>
   </div>
-  
-  
+
+
   <div style="float:left; width:240px; margin-right:20px">
-    <div id="head" style="padding:16px 0 12px; font-size:16px; color:black">Start Date</div>	
+    <div id="head" style="padding:16px 0 12px; font-size:16px; color:black">Start Date</div>
    <input type="text" name="start_date[]" id="start_date<?php echo $i; ?>" class="start_date<?php echo $i; ?> savedate" value="<?php if($start_date){echo $start_date;}?>" style="width:200px;">
   </div>
-  
 
-	
+
+
   <div style="float:left; width:240px; margin-right:20px">
-    <div id="head" style="padding:16px 0 12px; font-size:16px; color:black">End Date</div>	
+    <div id="head" style="padding:16px 0 12px; font-size:16px; color:black">End Date</div>
    <input type="text" name="end_date[]" value="<?php if($end_date){echo $end_date;}?>" class="end_date<?php echo $i; ?> savedate" id="end_date<?php echo $i; ?>" style="width:200px;">
   </div>
-   
+
   <div class="clr"></div>
 </div>
-	 <div class="clr"></div>						
+	 <div class="clr"></div>
 							<?php  } else {?>
-							
+
 							<div id="proto<?php echo $i; ?>">
   <div style="float:left; width:240px; margin-right:20px">
-    <div id="head" style="padding:16px 0 12px; font-size:22px">Start Date</div>	
+    <div id="head" style="padding:16px 0 12px; font-size:22px">Start Date</div>
    <input type="text" name="start_date[]" id="start_date<?php echo $i; ?>" class="start_date<?php echo $i; ?> savedate" value="<?php if($start_date){echo $start_date;}?>" style="width:200px;">
   </div>
-  
+
   <div style="float:left; width:240px; margin-right:20px">
     <div id="head" style="padding:16px 0 12px; font-size:22px">Select Protocol</div>
 				<select style="width:180px;" class="new_input" name="protocol[]" id="protocol<?php echo $i; ?>">
                       <?php
-					  
-							if(get_affiliate() && get_affiliate() != ""){	
-							$af_id	=get_affiliate();				  		
+
+							if(get_affiliate() && get_affiliate() != ""){
+							$af_id	=get_affiliate();
 							$res = mysql_query("select * from `protocols` where `clinic_id`='". $_SESSION['LOGGEDIN_MEMBER_ID'] ."' || `clinic_id`='$af_id' ORDER BY protocol_title ASC");
 							}else {
 							$res = mysql_query("select * from `protocols` where `clinic_id`='". $_SESSION['LOGGEDIN_MEMBER_ID'] ."' ORDER BY protocol_title ASC");
@@ -604,42 +608,42 @@ function showTh(value,id){
                       <?php } ?>
                     </select>
   </div>
-	
+
   <div style="float:left; width:250px; margin-right:20px">
-    <div id="head" style="padding:16px 0 12px; font-size:22px">End Date</div>	
+    <div id="head" style="padding:16px 0 12px; font-size:22px">End Date</div>
    <input type="text" name="end_date[]" value="<?php if($end_date){echo $end_date;}?>" class="end_date1 savedate" id="end_date1" style="width:200px;">
    &nbsp; &nbsp;
     <?php if($i>1){?>
       <img style="padding: 3px 0 0 0;cursor:pointer" src="images/icon_delete2.gif" align="right" onClick="remove_protocol(<?php echo $i; ?>)">
     <?php  } ?>
   </div>
- 
- 
- 
-   
+
+
+
+
   <div class="clr"></div>
 </div>
  <div class="clr"></div>
-  
-							
+
+
 							<?php }
 							} //end for
 							} // end is arary
 							else { ?>
-							
-							
+
+
  <div id="proto">
   <div style="float:left; width:240px; margin-right:20px">
-    <div id="head" style="padding:16px 0 12px; font-size:22px">Start Date</div>	
+    <div id="head" style="padding:16px 0 12px; font-size:22px">Start Date</div>
    <input type="text" name="start_date[]" id="start_date1" class="start_date1 savedate" style="width:200px;">
   </div>
-  
+
   <div style="float:left; width:240px; margin-right:20px">
     <div id="head" style="padding:16px 0 12px; font-size:22px">Select Protocol</div>
 				<select style="width:180px;" class="new_input" name="protocol[]" id="protocol">
                       <?php
-							if(get_affiliate() && get_affiliate() != ""){	
-							$af_id	=get_affiliate();				  		
+							if(get_affiliate() && get_affiliate() != ""){
+							$af_id	=get_affiliate();
 							$res = mysql_query("select * from `protocols` where `clinic_id`='". $_SESSION['LOGGEDIN_MEMBER_ID'] ."' || `clinic_id`='$af_id' ORDER BY protocol_title ASC");
 							}else {
 							$res = mysql_query("select * from `protocols` where `clinic_id`='". $_SESSION['LOGGEDIN_MEMBER_ID'] ."' ORDER BY protocol_title ASC");
@@ -650,62 +654,62 @@ function showTh(value,id){
                       <?php } ?>
                     </select>
   </div>
-	
+
   <div style="float:left; width:240px; margin-right:20px">
-    <div id="head" style="padding:16px 0 12px; font-size:22px">End Date</div>	
+    <div id="head" style="padding:16px 0 12px; font-size:22px">End Date</div>
    <input type="text" name="end_date[]" class="end_date1 savedate" id="end_date1" style="width:200px;">
   </div>
-   
-  <div class="clr"></div>
-</div>  
- <div class="clr"></div>
-<?php  }?>	
 
-	
-	
-		   <span id="add_more_protocol_area"></span> 
+  <div class="clr"></div>
+</div>
+ <div class="clr"></div>
+<?php  }?>
+
+
+
+		   <span id="add_more_protocol_area"></span>
 		    <div class="clr"></div>
-				   
+
 				   <div align="right" style="margin-top:10px;"><span id="add_more_protocol_btn"><img src="<?php echo IMAGE_PATH; ?>add_more.png" style="cursor:pointer" id="" onClick="add_more_protocol(<?php if ($aid){echo $aid;} else{ echo "1"; } ?>)" /></span></div><br /><br />
-					
+
                   </div>
-				  
+
 				   <div id="head" style="margin-top:30px;">Add Tests</div>
                      <div>
                        <select style="width:855px; height:300px" class="new_input" name="tests[]" id="tests" multiple="multiple">
                          <?php
-						 if(get_affiliate() && get_affiliate() != ""){	
-							$af_id	=get_affiliate();				  		
+						 if(get_affiliate() && get_affiliate() != ""){
+							$af_id	=get_affiliate();
 							$res = mysql_query("select * from `tests` where `clinic_id`='". $_SESSION['LOGGEDIN_MEMBER_ID'] ."' || `clinic_id`='$af_id' ORDER BY test_name ASC");
 							}else {
 							$res = mysql_query("select * from `tests` where `clinic_id`='". $_SESSION['LOGGEDIN_MEMBER_ID'] ."' ORDER BY test_name ASC");
 							}
-								
+
 								while($row = mysql_fetch_array($res)){
 							?>
                          <option value="<?php echo $row['id']; ?>" <?php if(is_array($bc_tests) && in_array($row['id'],$bc_tests)){ echo 'selected="selected"'; } ?>><?php echo $row['test_name']; ?></option>
                          <?php } ?>
                        </select>
                      </div>
-				  
+
                   <div id="head">Plan Details</div>
                   <div>
                     <textarea name="plan_detail" id="plan_detail" class="bc_input" style="width:855px; height:250px"><?php echo $bc_plan_detail; ?></textarea>
                   </div>
                 </div>
-               
-              
+
+
               </div>
             </div>
           </div>
         </div>
         <div class="create_event_submited">
-		
+
 		<input type="hidden" name="submit" value="1" />
-		<input type="image" src="<?php echo IMAGE_PATH; ?>submit-btn.png" name="create" value="Create Event" style="cursor:pointer" onClick="save();"  align="right" /> 
-       
-        
-         
+		<input type="image" src="<?php echo IMAGE_PATH; ?>submit-btn.png" name="create" value="Create Event" style="cursor:pointer" onClick="save();"  align="right" />
+
+
+
           <div class="clr"></div>
         </div>
       </form>
@@ -753,8 +757,8 @@ function showTh(value,id){
 		// Example content CSS (should be your site CSS)
 		content_css : "style.css",
 	});
-	
-	
+
+
 $(".delImg").click(function() {
 	var con = confirm("Are you sure you want to delete this image?");
 	if( con == true ) {
@@ -769,7 +773,7 @@ $(".delImg").click(function() {
 	if(imgInfo[5]=='showfile'){
 	$('#'+imgInfo[6]).css('display','block');
 	$('#showimg'+imgInfo[6]).html('<input type="file" name="images[]" />');
-	
+
 	}
 	}
 });

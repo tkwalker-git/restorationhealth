@@ -266,6 +266,7 @@ table .dele{
 		<option <?php if($_GET['p']=='supplement'){?> selected="selected"<?php } ?> value="supplement">Supplement</option>
 		<option <?php if($_GET['p']=='protocols'){?> selected="selected"<?php } ?> value="protocols">Protocols</option>
 		<option <?php if($_GET['p']=='plans'){?> selected="selected"<?php } ?> value="plans">Plans</option>
+		<option <?php if($_GET['p']=='forms'){?> selected="selected"<?php } ?> value="plans">Forms</option>
 	</select>
 	<input type="text" name="search" style="height:18px; padding:2px;" value="<?php echo $_GET['search']; ?>" />
 	<input type="submit" name="submit" value="Search" style="padding:2px 10px;" />
@@ -312,9 +313,10 @@ table .dele{
 
                                                 <li><a style="font-size:12px;"  href="?p=new-reports" <?php if($_GET['p']=='new-reports'){ echo "class='active'";} ?>>Pending Reviews</a></li>
 
-                                                 <li><a style="font-size:12px;"  href="?p=need-attention" <?php if($_GET['p']=='need-attention'){ echo "class='active'";} ?>>Attention Needed</a></li>
+                                                 <!-- <li><a style="font-size:12px;"  href="?p=need-attention" <?php if($_GET['p']=='need-attention'){ echo "class='active'";} ?>>Attention Needed</a></li> -->
 
                                                 <li><a style="font-size:12px;"  href="?p=follow-up" <?php if($_GET['p']=='follow-up'){ echo "class='active'";} ?>>Visits Completed</a></li>
+                                                <li><a style="font-size:12px;"  href="?p=inactive" <?php if($_GET['p']=='inactive'){ echo "class='active'";} ?>>Inactive Patients</a></li>
 
                                             </ul>
                                         </li>
@@ -331,6 +333,7 @@ table .dele{
                                         	<li><a style="font-size:12px;"  href="?p=supplement" <?php if($_GET['p'] == 'supplement'){ echo "class='active'";} ?>>View Supplements</a></li>
                                         	<li><a style="font-size:12px;"  href="?p=protocols" <?php if($_GET['p'] == 'protocols'){ echo "class='active'";} ?>>View Protocols</a></li>
                                         	<li><a style="font-size:12px;"  href="?p=plans" <?php if($_GET['p'] == 'plans'){ echo "class='active'";} ?>>View Plans</a></li>
+                                        	<li><a style="font-size:12px;"  href="?p=forms" <?php if($_GET['p'] == 'forms'){ echo "class='active'";} ?>>View Forms</a></li>
                                         </ul>
 									</li>
 									<li class="border"></li>
@@ -392,10 +395,10 @@ table .dele{
 										include("dr_supplement.php");
 
 									elseif($_GET['p'] == 'forms')
-										include("novi_forms.php");
+										include("clinic_forms.php");
 
 									elseif($_GET['p'] == 'add-forms')
-										include("add_novi_forms.php");
+										include("add_form.php");
 
 									elseif($_GET['p'] == 'videos')
 										include("list_videos.php");
@@ -411,6 +414,9 @@ table .dele{
 
 	                                elseif($_GET['p'] == 'new-reports')
 	                                    include("new-reports.php");
+
+	                                elseif($_GET['p'] == 'inactive')
+	                                    include("inactive-patients.php");
 
 	                                elseif($_GET['p'] == 'follow-up')
 	                                    include("follow-up.php");

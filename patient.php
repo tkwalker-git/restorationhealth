@@ -1,16 +1,16 @@
-<?php 
+<?php
 
 require_once('admin/database.php');
 require_once('site_functions.php');
 
 if (validateID($_SESSION['LOGGEDIN_MEMBER_ID'],'patients',$_GET["id"]) =='false')
         echo "<script>window.location.href='clinic_manager.php';</script>";
-		
+
 $member_id = $_SESSION['LOGGEDIN_MEMBER_ID'];
 
      $dt=date('Y-m-d');
-	 
-	
+
+
 if($_POST['comm']){
 $comment=$_POST['comment'];
 $date=date("Y-m-d");
@@ -20,31 +20,31 @@ if($stats_patient==2){
 	mysql_query("update patients set status='3' where id='".$_GET['id']."'");
 }
 echo "<script>window.location.href='".ABSOLUTE_PATH."patient.php?id=".$_GET['id']."&type=objective'</script>";
-} 
+}
 
 if($_POST['final']){
  $f_rel=$_POST['release'];
 mysql_query("update patients set status='".$f_rel."' where id='".$_GET['id']."'");
-} 
-	
-	 
+}
+
+
 	if($_POST['upload']){
-	$f_name = $_POST['f_name'];	
+	$f_name = $_POST['f_name'];
 	if ($_FILES["p_img"]["name"] != "") {
-			$bc_p_image  = time() . "_" . $_FILES["p_img"]["name"] ;		
+			$bc_p_image  = time() . "_" . $_FILES["p_img"]["name"] ;
 			move_uploaded_file($_FILES["p_img"]["tmp_name"], "patient_images/" .$bc_p_image);
 			/*makeThumbnail($bc_book_image, '../images/books/', $thDir, '100', '100', $th='re_');*/
 			mysql_query("insert into patient_images set Patient_ID='".$_GET['id']."',Image_Name='$f_name',File_name='$bc_p_image',Added_On='$dt',clinic_id='$member_id',status='1'");
-			
-		} 
-	
-	}   
-      
-	  if($_GET['del'] && $_GET['type']=='images'){	
+
+		}
+
+	}
+
+	  if($_GET['del'] && $_GET['type']=='images'){
 	mysql_query("delete from patient_images where ID='".$_GET['del']."'");
 	$succ=1;
-	
-	}    
+
+	}
 
 
 include_once('includes/header.php');
@@ -66,55 +66,55 @@ if($_GET['id']){
         $email  = $row['email'];
         $emrid  = $row['genensysuserid'];
     }
-    
+
     ///////get patient tests
-    
+
     $res1 = mysql_query("select * from patient_tests where patient_id='$id'");
         if(mysql_num_rows($res1)){
             while($row1=mysql_fetch_array($res1)){
             $tid= $row1['test_id'];
-                
+
                 $res2 = mysql_query("select * from tests where id='$tid'");
                 while($row2=mysql_fetch_array($res2)){
-                $testname.= $row2['test_name']."<br />";        
+                $testname.= $row2['test_name']."<br />";
                 }
-        
+
             }
-    
+
         }
 
 //get plan name and life style changes and dietery changes
 
 $get_data = mysql_query("select * from `plan` where `patient_id`='$id' && clinic_id='".$member_id."' order by id DESC limit 1");
 while($sho_get_data= mysql_fetch_array($get_data)){
-$planname = $sho_get_data['plan_name']."<br />";    
+$planname = $sho_get_data['plan_name']."<br />";
 $plan_id = $sho_get_data['id'];
 
         $res3 = mysql_query("select * from  plan_protocol where `plan_id`='$plan_id' limit 1");
         if(mysql_num_rows($res3)){
             while($row3=mysql_fetch_array($res3)){
             $poroid= $row3['protocol_id'];
-                
+
                 $res4 = mysql_query("select * from `protocols` where id='$poroid'");
                 while($row4=mysql_fetch_array($res4)){
                 $lifestyle_changes.= $row4['lifestyle_changes']."<br />";
                 $dietary_changes.= $row4['dietary_changes']."<br />";
                 $dietary_changes_s = strip_tags($dietary_changes);
-                         
+
                 }
-        
+
             }
-    
-        }      
+
+        }
 
 }
 
-    
-        
-        
-        
-        
-        
+
+
+
+
+
+
 
     }
 
@@ -149,7 +149,7 @@ $(document).ready(function() {
             'transitionIn'  : 'elastic',
             'transitionOut' : 'elastic'
         });
-        
+
 
     });
 
@@ -332,22 +332,22 @@ function showPopup(){
                                     <div class="thumb-1"><img src="<?php echo ABSOLUTE_PATH; ?>images/sim-demo.png" alt=""></div><!--end thumb-1-->
 
                                     <div style="text-align:center">
-                                    
-                                    
+
+
                                          <?php
 											$check=mysql_query("select * from  schedule_patient where patient_id='".$id."' && clinic_id='$member_id'");
-											$have=mysql_num_rows($check); 
+											$have=mysql_num_rows($check);
 										?>
-											
+
                                         <a href="<?php if($have){echo "schedule_patients.php?id=".$id;}else{echo "schedule_patients.php?pn=".$id;}?>"><input style="padding:4px 8px;" type="button" name="plan" value="Schedule Appointment"></a>
 
-                                        <a href="<?php echo ABSOLUTE_PATH; ?>create_plan.php"><input style="padding:4px 8px;" type="button" name="plan" value="Create Plan"></a> 
+                                        <a href="<?php echo "create_plan.php?pn=".$id;?>"><input style="padding:4px 8px;" type="button" name="plan" value="Create Plan"></a>
                                         <!-- <input style="padding:4px 8px;" type="button" name="closeout" value="Closeout"></a>  -->
-                                       
+
                                          <!-- <a href="view_plan_report_user.php?id='.$row['id'].'"
                                         <input style="padding:4px 8px;" type="button" name="plan" value="Print Plan" /></a> -->
-                                         <?php 
-                                                                
+                                         <?php
+
                                                             //  echo $viw;
                                                                 if($viw < 420){
                                                                 echo "<div class='clr'><br /></div>";
@@ -386,7 +386,7 @@ function showPopup(){
                                         <span class="ew-heading-a">Current Plan:&nbsp;<span style="color:#ff4e1f;"><?php echo $planname; ?></span></span>
                                     </div><!--
       <div class="clr"></div>
-                <div class="ew-when-where"> <span class="ew-when-heading">Patient Health Concerns</span> 
+                <div class="ew-when-where"> <span class="ew-when-heading">Patient Health Concerns</span>
                 <span>
                   <?php
                             $comments_s = strip_tags($comments);
@@ -406,53 +406,53 @@ function showPopup(){
 											<!-- insert upcoming patients script-start -->
 											<?php
 											$stats_pat	=	 getSingleColumn("status","select * from `patients` where `id`='".$_GET['id']."'");
-											
+
 											 /*?>$today=date("Y-m-d");
-											
+
 											$scheduled = getSingleColumn("cons_date","select * from `schedule_dates` where `patient_id`='".$row['id']."' && clinic_id='".$_SESSION['LOGGEDIN_MEMBER_ID']."'");
 											$notes	<?php */
 
 											?>
-											
+
 											<!-- insert upcoming patients script-end -->
-											
-											
-											  
+
+
+
 											<?php if ($stats_pat){
-												
+
 											?>
 												<span style="color:<?php echo patient_status_color($stats_pat); ?>; font-weight:bold;"><?php echo patient_status($stats_pat); ?></span>
-												
+
 												<?php if ($is_private){
-													
+
 												?>
 														<i style="font-weight:normal">(Private)<i>
 												<?php
 												 } ?>
-												 
-												 
+
+
 											<?php
 											 }
-											 
-											 
-											 
-											 
+
+
+
+
 											else{
-												
+
 											?>
 												<span style="color:#a80233">Request</span>
-											<?php 
+											<?php
 											}
 
 											if($row['type']=='draft'){
-												
+
 											?>
 												<font color="red"> (Draft)</font>
 											<?php
 											 } ?>
-											 
-											 
-											 </div>   
+
+
+											 </div>
 
                                     <div class="clr"></div>
 
@@ -494,7 +494,7 @@ function showPopup(){
                                 <div class="nav_new">
                                     <ul>
                                         <li <?php if ($type=='subjective'|| $type==''){ echo 'class="active"'; } ?>><a href="?id=<?php echo $_GET['id'];?>&type=subjective#l">(S)Subjective</a></li>
-                                        
+
                                         <!-- <li <?php if ($type=='reports'){ echo 'class="active"'; } ?>><a href="?id=<?php echo $_GET['id'];?>&type=reports#l">Reports</a></li> -->
                                         <!-- <li <?php if ($type=='concerns'){ echo 'class="active"'; } ?> ><a href="?id=<?php echo $_GET['id'];?>&type=concerns#l">Health Concerns</a></li> -->
 
@@ -503,40 +503,40 @@ function showPopup(){
                                         <li <?php if ($type=='assessments'){ echo 'class="active"'; } ?>><a href="?id=<?php echo $_GET['id'];?>&type=assessments#l">(A)Assessment</a></li>
 
                                         <li <?php if ($type=='plans'){ echo 'class="active"'; } ?>><a href="?id=<?php echo $_GET['id'];?>&type=plans#l">(P)Plan</a></li>
-                                        
+
                                         <li style=" width:160px; background-color:#CCCCCC; font-size: 15px;font-weight: bold;padding: 13px 24px;">&nbsp;</li>
-                                        
+
                                         <li <?php if ($type=='images'){ echo 'class="active"'; } ?>><a href="?id=<?php echo $_GET['id'];?>&type=images#l">Files & Images</a></li>
 
                                         <!-- <li <?php if ($type=='ehr'){ echo 'class="active"'; } ?>><a href="?id=<?php echo $_GET['id'];?>&type=emr#l">EHR</a></li> -->
-                                    </ul> 
+                                    </ul>
                                 </div><!--end nav_new-->
                                 <br class="clear">
-                                <a id="l"></a> <?php 
+                                <a id="l"></a> <?php
                                                 if ( $type == 'reports' )
                                                     include_once("widget_reports.php");
-                                                    
+
                                                 else if ( $type == 'assessments' )
                                                     include_once("widget_assesments-doctors.php");
-                                                        
+
                                                 else if ( $type == 'subjective' )
                                                     include_once("widget_subjective.php");
-                                                    
+
                                                 else if ( $type == 'objective' )
                                                     include_once("widget_objective.php");
-                                                    
+
                                                 else if ( $type == 'images' )
                                                     include_once("widget_images.php");
-                                                    
+
                                                 else if ( $type == 'plans' )
                                                     include_once("widget_plans.php");
-                                                    
+
                                                 else if ( $type == 'ehr' )
-                                                    include_once("widget_doctor_emr.php"); 
-                                                     
+                                                    include_once("widget_doctor_emr.php");
+
                                                 else
                                                     include_once("widget_subjective.php");
-                                                                
+
                                             ?> <!--End new code-->
                             </div>
                         </div>
@@ -546,7 +546,7 @@ function showPopup(){
                 </div>
             </div>
         </div><?php include_once('includes/footer.php');?>
-        
+
  <script>
 	tinyMCE.init({
 		// General options
@@ -569,7 +569,7 @@ function showPopup(){
 		// Example content CSS (should be your site CSS)
 		content_css : "style.css",
 	});
-	
+
 
 </script>
 

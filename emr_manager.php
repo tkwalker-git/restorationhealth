@@ -30,6 +30,7 @@ include_once('includes/header.php');
 					 $ups = getSingleColumn("password","select * from `users` where `id`='".$sess_id."'");
 					 $src = "https://yourhealthsupport.com:8443/WebApplication1/logging.jsp?u=".$uid."&p=".$ups."&type=pangea";
 			 ?>
+						<input type="hidden" name="ABSOLUTE_PATH" id="ABSOLUTE_PATH" value="<?php echo ABSOLUTE_PATH; ?>dashboard.php" />
 						<iframe src="<?php echo $src; ?>" width="100%" height="850px" scrolling="no" seamless="yes"></iframe>
 					</div>
 					<div class="clr"></div>

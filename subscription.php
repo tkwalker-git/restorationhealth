@@ -33,14 +33,14 @@ function genRandomString() {
 
     return $string;
 }
-$bc_card_expire_date		=	DBin($_POST["card_expire_date"]);
-$bc_year					=	DBin($_POST["year"]);
+$bc_card_expire_date			=	DBin($_POST["card_expire_date"]);
+$bc_year							=	DBin($_POST["year"]);
 $bc_card_first_name			=	DBin($_POST["card_first_name"]);
 $bc_card_last_name			=	DBin($_POST["card_last_name"]);
 $bc_card_billing_address1	=	DBin($_POST["card_billing_address1"]);
 $bc_card_billing_address2	=	DBin($_POST["card_billing_address2"]);
-$bc_billing_city			=	DBin($_POST["billing_city"]);
-$bc_billing_state			=	DBin($_POST["billing_state"]);
+$bc_billing_city					=	DBin($_POST["billing_city"]);
+$bc_billing_state					=	DBin($_POST["billing_state"]);
 $bc_billing_zip				=	DBin($_POST["billing_zip"]);
 $bc_billing_country			=	DBin($_POST["billing_country"]);
 $bc_card_w					=	DBin($_POST["card_w"]);
@@ -672,7 +672,7 @@ if(val >= 1){
 				<!--coupon information start-->
 
 
-								<input type="checkbox" name="termsofuse" value="1" onclick="EnableSubmit(this)" />&nbsp;By checking this box you agree with the <span><a href="#A" class="lbLink" onclick='window.open("terms-of-use.php","Window1","menubar=no,width=980,height=800,toolbar=no,scrollbars=yes");' >Terms of Service</a></span></div></div><!-- input-row -->
+								<input type="checkbox" name="termsofuse" value="1" onclick="EnableSubmit(this)" />&nbsp;By checking this box you agree with the <span><a href="#A" class="lbLink" onclick='window.open("terms-of-use-doctor.php","Window1","menubar=no,width=980,height=800,toolbar=no,scrollbars=yes");' >Terms of Service</a></span></div></div><!-- input-row -->
 
 
 				<br />

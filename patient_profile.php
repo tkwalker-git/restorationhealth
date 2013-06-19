@@ -92,6 +92,10 @@
 			}
 
 
+		$clinic_id		= attribValue('patients', 'clinicid', "where id='". $_SESSION['LOGGEDIN_MEMBER_ID'] ."'");
+		$emr_clinic_id	= attribValue('users', 'emr_clinic_id', "where id='". $clinic_id ."'");
+		$emr_patient_id	= attribValue('patients', 'genensysuserid', "where id='". $_SESSION['LOGGEDIN_MEMBER_ID'] ."'");
+		$patient_update	= UpdatePatient($emr_clinic_id,$emr_patient_id,$fname,$lname,$gender,$dob2,$address,$address2,$city,$state,$zip,$phone,$email,$email,$password);
 
 	$sql = "update patients set phone='$phone',address='$address',city='$city',zip='$zip',firstname='$fname',lastname='$lname',email='$email',sex='$gender',".  $pwd ."dob='$dob' " . $sql_img . " where id='". $member_id ."'";
 			if ( mysql_query($sql) ){

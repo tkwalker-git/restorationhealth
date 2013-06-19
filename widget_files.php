@@ -29,9 +29,9 @@ mysql_query($delqry);
 	<table cellspacing="0" cellpadding="0" border="0" width="100%">
 		<tr>
 		<td width="40%" class="topleft"><strong>File Name</strong></td>
-		<td width="25%" class="topleft"><strong>Date Added</strong></td>
-		<td width="25%" class="topleft"><strong>View Link</strong></td>
-		<td width="10%" class="topleftright"><strong>Action</strong></td>
+		<td width="30%" class="topleft"><strong>Date Added</strong></td>
+		<td width="30%" class="topleft"><strong>View Link</strong></td>
+<!-- 		<td width="10%" class="topleftright"><strong>Action</strong></td> -->
 		</tr>
 
 		<?php
@@ -56,7 +56,7 @@ mysql_query($delqry);
 			<td class="botleft"><?php echo  $row['File_name']; ?></td>
 			<td class="botleft"><?php echo $row['Added_On']; ?></td>
 			<td class="botleft"><a style="text-decoration:underline;" class="fancybox" rel="group" href="<?php echo ABSOLUTE_PATH."patient_images/".$row['File_name']; ?>">View File</a></td>
-			<td class="botleftright"><a style="text-decoration:underline;" href="patient.php?id=<?php echo $_GET['id']; ?>&type=images&del=<?php echo $row['ID'];  ?>">Delete</a></td>
+			<!-- <td class="botleftright"><a style="text-decoration:underline;" href="patient.php?id=<?php echo $_GET['id']; ?>&type=images&del=<?php echo $row['ID'];  ?>">Delete</a></td> -->
 			</tr>
 			<?php }
 		}

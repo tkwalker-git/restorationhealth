@@ -15,11 +15,11 @@ $sql = "select * from `patients` where `id`='".$_GET['pn']."'";
 	$r	=	mysql_query($sql);
 	while($ro = mysql_fetch_array($r)){
 	$bc_patient_address		=	$ro['address'];
-	$bc_patient_name		=	$ro['firstname']." ".$ro['lastname'];
-	$bc_patient_city		=	$ro['city'];
-	$bc_patient_zip			=	$ro['zip'];
-	$patient_id				=	$ro['id'];
-	$bc_arr_patient_id		=	$ro['id'];
+	$bc_patient_name			=	$ro['firstname']." ".$ro['lastname'];
+	$bc_patient_city				=	$ro['city'];
+	$bc_patient_zip				=	$ro['zip'];
+	$patient_id						=	$ro['id'];
+	$bc_arr_patient_id			=	$ro['id'];
 	}
 
 if (validateID($_SESSION['LOGGEDIN_MEMBER_ID'],'patients',$_GET["pn"]) =='false')
@@ -28,10 +28,10 @@ if (validateID($_SESSION['LOGGEDIN_MEMBER_ID'],'patients',$_GET["pn"]) =='false'
 
 
   $occurrences			=	$_POST['occurrences'];
-  $bc_patient_id		=	$_POST["patient_id"];
+  $bc_patient_id			=	$_POST["patient_id"];
   $bc_comments			=	$_POST["event_description"];
-  $patient_status		=	$_POST["status"];
-  $bc_userid			=	$_SESSION['LOGGEDIN_MEMBER_ID'];
+  $patient_status			=	$_POST["status"];
+  $bc_userid				=	$_SESSION['LOGGEDIN_MEMBER_ID'];
 
 
 

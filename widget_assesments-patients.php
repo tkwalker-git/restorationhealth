@@ -28,10 +28,10 @@
 
 		?>
 			<tr>
-			<td class="botleft"><a href="survey_view.php?id=<?php echo $row['mnoviforms_id']; ?>&frmID=<?php echo $row['mnoviforms_id'];?>"style="color:#0066FF;"><?php echo  $row['FormName']; ?></td>
+			<td class="botleft"><a href="survey_view.php?id=<?php echo $row['mnoviforms_id']; ?>&frmID=<?php echo $row['mnoviforms_id'];?>&patient=<?php echo $_GET['id']; ?>&rev=<?php echo $row['Revision']; ?>"style="color:#0066FF;"><?php echo  $row['FormName']; ?></td>
 			<td class="botleft"><?php echo date("M d, Y \-\-\-\t\ g:ia",strtotime($row['date_started'])); ?></td>
 			<!-- <td class="botleft"><?php echo $row['date_completed']; ?></td>	 -->
-			<td class="botleftright">&nbsp;<a href="survey_view.php?id=<?php echo $row['mnoviforms_id']; ?>&frmID=<?php echo $row['mnoviforms_id'];?>"style="color:#0066FF;">View Report</a></td>
+			<td class="botleftright">&nbsp;<a target="_blank" href="survey_view.php?id=<?php echo $row['mnoviforms_id']; ?>&frmID=<?php echo $row['mnoviforms_id'];?>&patient=<?php echo $_GET['id']; ?>&rev=<?php echo $row['Revision']; ?>"style="color:#0066FF;">View Report</a></td>
 			<!-- <td class="botleftright"><a href="survey_report.php?resid=<?php echo $row['response_id']; ?>&frmID=<?php echo $row['mnoviforms_id'];?>">Report</a></td> -->
 			</tr>
 			<?php }

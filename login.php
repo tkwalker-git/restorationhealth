@@ -144,7 +144,7 @@
               </div>
             </div>
             <!-- form -->
-			<div style="background: none repeat scroll 0 0 #F5F5F5; float: left; font-size: 12px; line-height: 17px; width: 190px;"><img src="<?php echo ABSOLUTE_PATH;?>images/doctor-a.jpg" alt="" style="border:#eeeeee solid 1px;" border="0" />
+			<div style="background: none repeat scroll 0 0 #F5F5F5; float: left; font-size: 12px; line-height: 17px; width: 190px;"><img src="<?php echo ABSOLUTE_PATH;?>images/doctor-login.png" alt="" style="border:#eeeeee solid 1px;" border="0" />
 			</div>
           </form>
         </div>

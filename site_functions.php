@@ -180,6 +180,8 @@ $p_stat="No Show";
 $p_stat="Checked In";
 }elseif($val==7){
 $p_stat="Attention Needed";
+}elseif($val==8){
+$p_stat="Inactive";
 }
 
 return $p_stat;

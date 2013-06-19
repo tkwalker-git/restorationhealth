@@ -3,9 +3,9 @@
 	require_once('site_functions.php');
 
 function genRandomString() {
-   
+
         $string ="pangea";
-   
+
 
     return $string;
 }
@@ -26,7 +26,7 @@ if ($_POST["email"] == "")
 		}
 		else {
 		$vcode			= genRandomString();
-		}		
+		}
 		 $vc			= base64_encode($vcode);
 		 $ci			= base64_encode($clinic_id);
 		 $bc_namef		= getSingleColumn('firstname',"select * from `users` where `id`='".$clinic_id."'");
@@ -34,18 +34,18 @@ if ($_POST["email"] == "")
 		$bc_cl_id		= getSingleColumn('clinicid',"select * from `users` where `id`='$clinic_id'");
 		$bc_cl_email	= getSingleColumn('email',"select * from `users` where `id`='$clinic_id'");
 		$bc_cl_name		= getSingleColumn('clinicname',"select * from `clinic` where `id`='$bc_cl_id'");
-		
-		
-		
+
+
+
 
 	$message= '<div style="text-align:center; margin:0px; background-color:#FFFFFF;" class="background">
 			<table style="text-align:center; font-family:Georgia; color:#404040; line-height:160%; font-size:16px;" border="0" cellspacing="0" cellpadding="0" width="600" class="layout_background">
 				<tr>
 					<td style="margin:0px; padding:10px; color:#666; font-size:11px; font-family:Arial;	font-weight:normal; text-align:center; text-transform:lowercase;
 			border:none 0px #FFF;" colspan="3">
-						
+
 						<span>Email not displaying correctly? <a style="color:#666; text-decoration:underline; font-weight:normal;" href="*|ARCHIVE|*" target="_blank">View it in your browser.</a></span>
-						
+
 					</td>
 				</tr>
 				<tr>
@@ -59,7 +59,7 @@ if ($_POST["email"] == "")
 				    <p>Hello!</p>
 <p>
 Thanks for taking the time to complete your personalized health care record with our office. We are looking forward to working with you and want to make sure you have everything you need to be successful as you pursue your healthcare goals. By establishing your protected healthcare record, you will have the ability to access your information at anytime. Please feel free to contact our office if you have any questions. .</p>
-				    
+
 				  </td>
 				</tr>
 				<tr>
@@ -70,58 +70,58 @@ Thanks for taking the time to complete your personalized health care record with
 	Dr. '.$bc_namef.'&nbsp;'.$bc_namel.'<br>
 	'.$bc_cl_name.'<br>
 	<a href="'.ABSOLUTE_PATH.'create_patient.php?ci='.$ci.'&vc='.$vc.'" target="_blank">Click here to start your health assessment</a></p><br>
-				
+
 					<p>Best of luck to a healthier you!<br>
 				   Sincerely,<br>
-				   Dr.&nbsp;'.$bc_namel.'</p>			
-				
+				   Dr.&nbsp;'.$bc_namel.'</p>
+
 
 
 </td>
 
 				</tr>
-						
-				   
+
+
 			  <tr>
 					<td style="background-color:#FFFFFF;border-top:1px solid #CCC;padding:20px;	font-size:10px;	color:#666;	line-height:100%;			font-family:Arial; 	text-align:center;" colspan="3" class="background">
-					    
+
 					    <p>Copyright (C) 2013 Pangea All rights reserved.</p>
-						
+
 					</td>
 				</tr>
 			</table>
 		</div>';
 
-		
+
 				//$sender		= ''.$bc_cl_email.'';
 				$sender		=	'info@yourhealthsupport.com';
 				$subject	= ''.$bc_cl_name.' Invitation';
-				
+
 				$headers	= 'MIME-Version: 1.0' . "\r\n";
 				$headers	.= 'Content-type: text/html; charset=iso-8859-1' . "\r\n";
 				$headers	.= 'From: '.$bc_name.'<'. $sender .'>' . "\r\n";
-				
+
 				$sent	= 	mail($to,$subject,$message,$headers);
-				
+
 				if(!$havemail){
 				$today=date("Y-m-d");
 				$sql="INSERT INTO `patient_invitations` (`id` ,`clinic_id` ,`verification_code` ,`email` ,`date`)VALUES (NULL , '$clinic_id', '$vcode', '$to', '$today');";
 				$succ=mysql_query($sql);
 				}
-				
+
 				if ($sent) {
 					$msg = "Invitation sent successfully!";
 				} else {
 					$msg="Please try again later";
-				} // end if res	
-			
+				} // end if res
+
 			}else {
 			$msg = "Email can not be Empty";
-			}	
+			}
 	}
-	
-	
-		
+
+
+
 
 ?>
 
@@ -140,8 +140,8 @@ Thanks for taking the time to complete your personalized health care record with
 	#simplemo {
 
 		color:#000;
-		
-		box-shadow:0 2px 3px #777;		
+
+		box-shadow:0 2px 3px #777;
 
 		padding:12px;
 
@@ -255,7 +255,7 @@ Thanks for taking the time to complete your personalized health care record with
 
 		}
 
-		
+
 
 	.formfield select{
 
@@ -287,7 +287,7 @@ Thanks for taking the time to complete your personalized health care record with
 
     <div id="basic-modal-content" >
 
-     
+
 <form name="invite" method="post" action="" onsubmit="return checkRsvp();">
       <div id="rsvp">
 
@@ -297,7 +297,7 @@ Thanks for taking the time to complete your personalized health care record with
 
         <div class="rsvpBox" align="center">
 
-		
+
 			<div style="height:30px; padding-top:15px;"> <?php echo '<span style="color:#ff0000">'.$msg.'</span>';  ?></div>
 
           <div class="formfield">
@@ -306,17 +306,17 @@ Thanks for taking the time to complete your personalized health care record with
 
             <input type="text" name="email" value="<?php echo $email; ?>" id="email" style="height:30px; width:300px;" />
 
-          </div>       
+          </div>
 
-          
+
 
           <div align="center" style="padding-top:30px" id="rsvp_submit">
 
             <input type="submit" name="submit" value="Send Invitiation" align="left" style="padding:7px 15px;" />
 
           </div>
-			<div style="text-align:left; line-height:20px; font-size:14px; font-family:Arial; padding:15px 15px 0"> <strong>Invite Link : </strong><br /><span style="font-size:12px;"><?php echo ABSOLUTE_PATH; ?>/create_patient.php?ci=<?php echo base64_encode($_SESSION['LOGGEDIN_MEMBER_ID']); ?>&vc=<?php echo base64_encode('pangea') ?></span></div>
-		 
+			<div style="text-align:left; line-height:20px; font-size:14px; font-family:Arial; padding:15px 15px 0"> <strong>Invite Link : </strong><br /><span style="font-size:12px;"><?php echo ABSOLUTE_PATH; ?>create_patient.php?ci=<?php echo base64_encode($_SESSION['LOGGEDIN_MEMBER_ID']); ?>&vc=<?php echo base64_encode('pangea') ?></span></div>
+
         </div>
 
       </div>
